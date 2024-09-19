@@ -8,24 +8,41 @@ import {
 import Hash from '@ioc:Adonis/Core/Hash'
 import { DateTime } from 'luxon'
 import Entry from './Entry'
+import FormatDates from 'App/Services/FormatDates'
 
 export default class User extends BaseModel {
-  @column({ isPrimary: true })
+  @column({
+    isPrimary: true,
+  })
   public id: number
 
   @column()
   public email: string
 
-  @column({ serializeAs: null })
+  @column({
+    serializeAs: null,
+  })
   public password: string
 
   @column()
+  public username: string
+
+  @column({
+    serializeAs: null,
+  })
   public rememberMeToken: string | null
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({
+    autoCreate: true,
+    ...FormatDates.serializeDates(),
+  })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    ...FormatDates.serializeDates(),
+  })
   public updatedAt: DateTime
 
   @beforeSave()
