@@ -25,8 +25,6 @@ export default Env.rules({
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
 
   DB_CONNECTION: Env.schema.string(),
-  DB_DEBUG: Env.schema.boolean(),
-  DB_CERT: Env.schema.string.optional(),
 
   PG_HOST: Env.schema.string({ format: 'host' }),
   PG_PORT: Env.schema.number(),

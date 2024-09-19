@@ -7,23 +7,13 @@
 
 import Env from '@ioc:Adonis/Core/Env'
 import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
-import fs from 'fs'
 
-const cert = Env.get('DB_CERT')
-
-let connection: any = {
+const connection_config = {
   host: Env.get('PG_HOST'),
   port: Env.get('PG_PORT'),
   user: Env.get('PG_USER'),
   password: Env.get('PG_PASSWORD', ''),
   database: Env.get('PG_DB_NAME'),
-}
-
-if (cert) {
-  connection.ssl = {
-    rejectUnauthorized: Env.get('NODE_ENV') == 'production' ? true : false,
-    ca: fs.readFileSync(cert),
-  }
 }
 
 const databaseConfig: DatabaseConfig = {
@@ -38,7 +28,6 @@ const databaseConfig: DatabaseConfig = {
   |
   */
   connection: Env.get('DB_CONNECTION'),
-
   connections: {
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +55,6 @@ const databaseConfig: DatabaseConfig = {
       healthCheck: false,
       debug: false,
     },
-
     /*
     |--------------------------------------------------------------------------
     | PostgreSQL config
@@ -80,22 +68,20 @@ const databaseConfig: DatabaseConfig = {
     */
     pg: {
       client: 'pg',
-      connection,
+      connection: connection_config,
       migrations: {
         naturalSort: true,
         paths: [
           // Without Foreign Relation
-          './database/migrations/Administrative/NoForeign',
-          './database/migrations/Operative/NoForeign',
+          './database/migrations/Inventory/NoForeign',
           // With Foreign Relation
-          './database/migrations/Administrative/Foreign',
-          './database/migrations/Operative/Foreign',
+          './database/migrations/Inventory/Foreign',
         ],
       },
       seeders: {
         paths: [
-          './database/seeders/Administrative',
-          './database/seeders/Operative',
+          // Seeders
+          './database/seeders/Inventory',
         ],
       },
       healthCheck: true,
@@ -103,7 +89,7 @@ const databaseConfig: DatabaseConfig = {
     },
     alters: {
       client: 'pg',
-      connection,
+      connection: connection_config,
       migrations: {
         naturalSort: true,
         paths: [
