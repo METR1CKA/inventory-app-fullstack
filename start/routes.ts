@@ -20,6 +20,20 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async ({ view }) => {
-  return view.render('home')
+Route.group(() => {
+  Route.get('login', 'AuthUsersController.create').as('login')
+  Route.post('login', 'AuthUsersController.store')
+  Route.post('logout', 'AuthUsersController.destroy')
 })
+  .namespace('App/Controllers/Http/Auth')
+  .middleware('guest')
+
+Route.group(() => {
+  Route.get('/', 'HomeController.index').as('/')
+
+  Route.group(() => {
+    Route.resource('categories', 'CategoriesController').as('categories')
+    Route.resource('products', 'ProductsController').as('products')
+    Route.resource('entries', 'EntriesController').as('entries')
+  }).namespace('App/Controllers/Http/Modules')
+}).middleware('auth:web')

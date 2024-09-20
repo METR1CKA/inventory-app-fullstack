@@ -8,7 +8,7 @@
 import Env from '@ioc:Adonis/Core/Env'
 import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
-const connection_config: any = {
+const connection_config = {
   host: Env.get('PG_HOST'),
   port: Env.get('PG_PORT'),
   user: Env.get('PG_USER'),
