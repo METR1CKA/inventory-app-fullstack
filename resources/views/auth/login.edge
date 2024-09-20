@@ -30,7 +30,7 @@
             type="email"
             placeholder="Email"
             name="email"
-            value="{{ flashMessages.get('email', '') ?? '' }}"
+            value="{{ flashMessages.get('email', '') }}"
             required
           >
           <div class="input-group-append">
@@ -40,7 +40,7 @@
           </div>
         </div>
         <p class="text-red">
-          {{ flashMessages.get('errors.email[0]', '')  ?? '' }}
+          {{ flashMessages.get('errors.email[0]', '') }}
         </p>
         <div class="input-group mb-3">
           <input
@@ -48,7 +48,7 @@
             class="form-control"
             placeholder="Password"
             name="password"
-            value="{{ flashMessages.get('password', '')  ?? '' }}"
+            value="{{ flashMessages.get('password', '') }}"
             required
           >
           <div class="input-group-append">
@@ -58,20 +58,12 @@
           </div>
         </div>
         <p class="text-red">
-          {{ flashMessages.get('errors.password[0]', '') ?? '' }}
-          {{ flashMessages.get('error', '')  ?? '' }}
+          {{ flashMessages.get('errors.password[0]', '') }}
+          {{ flashMessages.get('error', '') }}
         </p>
         <div class="row">
-          <div class="col-8">
-            <div class="icheck-primary">
-              <input type="checkbox" id="remember" name="remember">
-              <label for="remember">
-                Recordarme
-              </label>
-            </div>
-          </div>
           <!-- /.col -->
-          <div class="col-4">
+          <div class="col-12">
             <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
           </div>
           <!-- /.col -->

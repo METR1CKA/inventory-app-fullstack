@@ -21,12 +21,13 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-  Route.get('login', 'AuthUsersController.create').as('login')
-  Route.post('login', 'AuthUsersController.store')
-  Route.post('logout', 'AuthUsersController.destroy')
-})
-  .namespace('App/Controllers/Http/Auth')
-  .middleware('guest')
+  Route.group(() => {
+    Route.get('login', 'AuthUsersController.create').as('login')
+    Route.post('login', 'AuthUsersController.store')
+  }).middleware('guest')
+
+  Route.post('logout', 'AuthUsersController.destroy').middleware('auth:web')
+}).namespace('App/Controllers/Http/Auth')
 
 Route.group(() => {
   Route.get('/', 'HomeController.index').as('/')

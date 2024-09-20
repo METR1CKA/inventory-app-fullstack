@@ -34,7 +34,7 @@
     "@adonisjs/core": "^5.8.0",
     "@adonisjs/lucid": "18.4.0",
     "@adonisjs/repl": "^3.1.0",
-    "@adonisjs/session": "^6.2.0",
+    "@adonisjs/session": "^6.4.0",
     "@adonisjs/shield": "^7.0.0",
     "@adonisjs/view": "^6.1.0",
     "luxon": "^3.5.0",

@@ -1,10 +1,10 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <a href="#" class="brand-link">
+  <div href="{{ route('/') }}" class="brand-link">
     <img src="dist/img/FCA.png" alt="FCA Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-    <span class="brand-text font-weight-light">Inventario</span>
-  </a>
+    <span class="brand-text font-weight-light">F. C. A.</span>
+  </div>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -14,7 +14,7 @@
         <img src="dist/img/avatar5.png" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
-        <a href="#" class="d-block">Carlos Nomar Gutiérrez Garcia</a>
+        <div class="d-block text-white">{{ session.get('username') }}</div>
       </div>
     </div>
 

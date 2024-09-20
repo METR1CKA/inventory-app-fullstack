@@ -13,7 +13,7 @@ export default class AuthUsersController {
     request,
     response,
   }: HttpContextContract) {
-    const { email, password, remember } = await request.validate(LoginValidator)
+    const { email, password } = await request.validate(LoginValidator)
 
     try {
       await auth.use('web').verifyCredentials(email, password)
@@ -24,17 +24,22 @@ export default class AuthUsersController {
 
     const user = await User.findBy('email', email)
 
-    console.log(user)
-
     if (!user || !user.active) {
       session.flash('error', 'Usuario no encontrado')
       return response.redirect().back()
     }
 
-    await auth.use('web').attempt(email, password, remember)
+    await auth.use('web').attempt(email, password)
 
-    return response.redirect().toRoute('home')
+    session.put('username', user.username)
+    session.put('email', user.email)
+
+    return response.redirect().toRoute('/')
   }
 
-  public async destroy({}: HttpContextContract) {}
+  public async destroy({ auth, response }: HttpContextContract) {
+    await auth.use('web').logout()
+
+    return response.redirect().toRoute('/')
+  }
 }

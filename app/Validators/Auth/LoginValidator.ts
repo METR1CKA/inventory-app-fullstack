@@ -14,7 +14,6 @@ export default class LoginValidator {
       rules.required(),
       rules.maxLength(15),
     ]),
-    remember: schema.boolean.optional(),
   })
 
   public messages: CustomMessages = {
