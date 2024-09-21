@@ -13,11 +13,11 @@ import Event from '@ioc:Adonis/Core/Event'
 import Env from '@ioc:Adonis/Core/Env'
 
 if (Env.get('DB_DEBUG')) {
-  Event.on('db:query', Database.prettyPrint)
+    Event.on('db:query', Database.prettyPrint)
 }
 
 Event.onError((event, error, data) => {
-  Logger.fatal('Event %s failed', event)
-  Logger.error(error)
-  Logger.error(data)
+    Logger.fatal('Event %s failed', event)
+    Logger.error(error)
+    Logger.error(data)
 })

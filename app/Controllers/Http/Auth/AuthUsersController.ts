@@ -3,43 +3,45 @@ import User from 'App/Models/User'
 import LoginValidator from 'App/Validators/Auth/LoginValidator'
 
 export default class AuthUsersController {
-  public async create({ view }: HttpContextContract) {
-    return await view.render('auth/login')
-  }
-
-  public async store({
-    auth,
-    session,
-    request,
-    response,
-  }: HttpContextContract) {
-    const { email, password } = await request.validate(LoginValidator)
-
-    try {
-      await auth.use('web').verifyCredentials(email, password)
-    } catch (error) {
-      session.flash('error', 'Credenciales incorrectas')
-      return response.redirect().back()
+    public async view({ view }: HttpContextContract) {
+        return await view.render('auth/login')
     }
 
-    const user = await User.findBy('email', email)
+    public async login({
+        auth,
+        session,
+        request,
+        response,
+    }: HttpContextContract) {
+        const { email, password } = await request.validate(LoginValidator)
 
-    if (!user || !user.active) {
-      session.flash('error', 'Usuario no encontrado')
-      return response.redirect().back()
+        try {
+            await auth.use('web').verifyCredentials(email, password)
+        } catch (error) {
+            session.flash('error', 'Credenciales incorrectas')
+            return response.redirect().back()
+        }
+
+        const user = await User.findBy('email', email)
+
+        if (!user || !user.active) {
+            session.flash('error', 'Usuario no encontrado')
+            return response.redirect().back()
+        }
+
+        await auth.use('web').attempt(email, password)
+
+        session.put('username', user.username)
+        session.put('email', user.email)
+
+        return response.redirect().toRoute('/')
     }
 
-    await auth.use('web').attempt(email, password)
+    public async logout({ auth, session, response }: HttpContextContract) {
+        await auth.use('web').logout()
 
-    session.put('username', user.username)
-    session.put('email', user.email)
+        session.clear()
 
-    return response.redirect().toRoute('/')
-  }
-
-  public async destroy({ auth, response }: HttpContextContract) {
-    await auth.use('web').logout()
-
-    return response.redirect().toRoute('/')
-  }
+        return response.redirect().toRoute('login')
+    }
 }
