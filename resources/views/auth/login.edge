@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Inventario | Iniciar sesión</title>
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- icheck bootstrap -->
@@ -31,94 +33,91 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.45); /* Ajusta la opacidad aquí, negro con 50% de opacidad */
-        z-index: -1; /* Para asegurarse de que está detrás del contenido */
+        background-color: rgba(0, 0, 0, 0.45);
+        /* Ajusta la opacidad aquí, negro con 50% de opacidad */
+        z-index: -1;
+        /* Para asegurarse de que está detrás del contenido */
     }
 
     /* Estilo para la caja de login */
-    .login-box, .card {
-        background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con 90% de opacidad */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    .login-box,
+    .card {
+        background-color: rgba(255, 255, 255, 0.9);
+        /* Fondo blanco con 90% de opacidad */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Sombra ligera */
     }
 
     /* Mejorar el contraste de los textos dentro de la tarjeta */
-    .login-box .card-header, .login-box .card-body {
-        color: #000; /* Texto negro para mejor legibilidad */
+    .login-box .card-header,
+    .login-box .card-body {
+        color: #000;
+        /* Texto negro para mejor legibilidad */
     }
 </style>
-<body class="hold-transition login-page ">
-<div class="login-box login-box-color">
-    <!-- /.login-logo -->
-    <div class="card card-outline card-primary">
-        <div class="card-header text-center">
-            <h1>
-                <b>
-                    INVENTARIO
-                </b>
-            </h1>
-        </div>
-        <div class="card-body">
-            <form action="{{ route('/login') }}" method="POST">
-                {{ csrfField() }}
-                <div class="input-group mb-3">
-                <input
-                    class="form-control"
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    value="{{ flashMessages.get('email', '') }}"
-                    required
-                >
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                    <span class="fas fa-envelope"></span>
-                    </div>
-                </div>
-                </div>
-                <span class="text-red">
-                {{ flashMessages.get('errors.email[0]', '') }}
-                </span>
-                <div class="input-group mb-3">
-                <input
-                    type="password"
-                    class="form-control"
-                    placeholder="Password"
-                    name="password"
-                    value="{{ flashMessages.get('password', '') }}"
-                    required
-                >
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                    <span class="fas fa-lock"></span>
-                    </div>
-                </div>
-                </div>
-                <p class="text-red col-12">
-                {{ flashMessages.get('errors.password[0]', '') }}
-                {{ flashMessages.get('error', '') }}
-                </p>
-                <div class="row">
-                <!-- /.col -->
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary btn-block">
-                        Iniciar sesión
-                    </button>
-                </div>
-                <!-- /.col -->
-                </div>
-            </form>
-        </div>
-        <!-- /.card-body -->
-    </div>
-    <!-- /.card -->
-</div>
-<!-- /.login-box -->
 
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.min.js"></script>
+<body class="hold-transition login-page ">
+    <div class="login-box login-box-color">
+        <!-- /.login-logo -->
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <h1>
+                    <b>
+                        INVENTARIO
+                    </b>
+                </h1>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('/login') }}" method="POST">
+                    {{ csrfField() }}
+                    <div class="input-group mb-3">
+                        <input class="form-control" type="email" placeholder="Email" name="email"
+                            value="{{ flashMessages.get('email', '') }}" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-red">
+                        {{ flashMessages.get('errors.email[0]', '') }}
+                    </span>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" placeholder="Password" name="password"
+                            value="{{ flashMessages.get('password', '') }}" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-red col-12">
+                        {{ flashMessages.get('errors.password[0]', '') }}
+                        {{ flashMessages.get('error', '') }}
+                    </p>
+                    <div class="row">
+                        <!-- /.col -->
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Iniciar sesión
+                            </button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.login-box -->
+
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="dist/js/adminlte.min.js"></script>
 </body>
+
 </html>

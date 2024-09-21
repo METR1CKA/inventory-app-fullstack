@@ -1,7 +1,11 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Category from 'App/Models/Category'
 
 export default class CategoriesController {
-    public async index({}: HttpContextContract) {}
+    public async index({ view }: HttpContextContract) {
+        const categories = await Category.all()
+        return view.render('inventory/category', { categories })
+    }
 
     public async create({}: HttpContextContract) {}
 

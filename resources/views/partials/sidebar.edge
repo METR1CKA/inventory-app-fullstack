@@ -1,6 +1,7 @@
 <style>
     .nav-link i {
-        margin-right: 10px; /* Espacio de 10px entre el ícono y el texto */
+        margin-right: 10px;
+        /* Espacio de 10px entre el ícono y el texto */
     }
 </style>
 <!-- Main Sidebar Container -->
@@ -15,43 +16,43 @@
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-            <img src="dist/img/avatar5.png" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-            <div class="d-block text-white">{{ session.get('username') }}</div>
-        </div>
+            <div class="image">
+                <img src="dist/img/avatar5.png" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <div class="d-block text-white">{{ session.get('username') }}</div>
+            </div>
         </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-            <li class="nav-item"></li>
-                <a href="#" class="nav-link">
-                    <i class="fas fa-list-alt nav-icon"></i>
-                    <p>
-                        Categorias
-                    </p>
-                </a>
-            </li>
-            <li class="nav-item"></li>
-                <a href="#" class="nav-link">
-                    <i class="fas fa-cube nav-icon"></i>
-                    <p>
-                        Productos
-                    </p>
-                </a>
-            </li>
-            <li class="nav-item"></li>
-                <a href="#" class="nav-link">
-                    <i class="fas fa-truck-loading nav-icon"></i>
-                    <p>
-                        Entradas
-                    </p>
-                </a>
-            </li>
-        </ul>
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a href="{{ route('/categories') }}" class="nav-link">
+                        <i class="fas fa-list-alt nav-icon"></i>
+                        <p>
+                            Categorias
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cube nav-icon"></i>
+                        <p>
+                            Productos
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-truck-loading nav-icon"></i>
+                        <p>
+                            Entradas
+                        </p>
+                    </a>
+                </li>
+            </ul>
         </nav>
         <!-- /.sidebar-menu -->
     </div>

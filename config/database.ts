@@ -9,15 +9,15 @@ import Env from '@ioc:Adonis/Core/Env'
 import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
 const pg_connection = {
-  host: Env.get('PG_HOST'),
-  port: Env.get('PG_PORT'),
-  user: Env.get('PG_USER'),
-  password: Env.get('PG_PASSWORD', ''),
-  database: Env.get('PG_DB_NAME'),
+    host: Env.get('PG_HOST'),
+    port: Env.get('PG_PORT'),
+    user: Env.get('PG_USER'),
+    password: Env.get('PG_PASSWORD', ''),
+    database: Env.get('PG_DB_NAME'),
 }
 
 const databaseConfig: DatabaseConfig = {
-  /*
+    /*
   |--------------------------------------------------------------------------
   | Connection
   |--------------------------------------------------------------------------
@@ -27,9 +27,9 @@ const databaseConfig: DatabaseConfig = {
   | file.
   |
   */
-  connection: Env.get('DB_CONNECTION'),
-  connections: {
-    /*
+    connection: Env.get('DB_CONNECTION'),
+    connections: {
+        /*
     |--------------------------------------------------------------------------
     | PostgreSQL config
     |--------------------------------------------------------------------------
@@ -40,41 +40,42 @@ const databaseConfig: DatabaseConfig = {
     | npm i pg
     |
     */
-    pg: {
-      client: 'pg',
-      connection: pg_connection,
-      migrations: {
-        naturalSort: true,
-        paths: [
-          // Without Foreign Relation
-          './database/migrations/Inventory/NoForeign',
-          // With Foreign Relation
-          './database/migrations/Inventory/Foreign',
-        ],
-      },
-      seeders: {
-        paths: [
-          // Seeders
-          './database/seeders/Inventory',
-        ],
-      },
-      healthCheck: true,
-      debug: Env.get('DB_DEBUG', false),
+        pg: {
+            client: 'pg',
+            connection: pg_connection,
+            migrations: {
+                naturalSort: true,
+                paths: [
+                    // Without Foreign Relation
+                    './database/migrations/Inventory/NoForeign',
+                    // With Foreign Relation
+                    './database/migrations/Inventory/Foreign',
+                ],
+            },
+            seeders: {
+                paths: [
+                    // Seeders
+                    './database/seeders/User',
+                    './database/seeders/Inventory',
+                ],
+            },
+            healthCheck: true,
+            debug: Env.get('DB_DEBUG', false),
+        },
+        alters: {
+            client: 'pg',
+            connection: pg_connection,
+            migrations: {
+                naturalSort: true,
+                paths: [
+                    // Aleter tables
+                    './database/migrations/Alters',
+                ],
+            },
+            healthCheck: true,
+            debug: Env.get('DB_DEBUG', false),
+        },
     },
-    alters: {
-      client: 'pg',
-      connection: pg_connection,
-      migrations: {
-        naturalSort: true,
-        paths: [
-          // Aleter tables
-          './database/migrations/Alters',
-        ],
-      },
-      healthCheck: true,
-      debug: Env.get('DB_DEBUG', false),
-    },
-  },
 }
 
 export default databaseConfig

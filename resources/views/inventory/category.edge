@@ -1,0 +1,161 @@
+@layout('layout/app')
+
+@set('title', 'Categorías')
+
+@set('table_id', 'datatable-categories')
+
+@section('body')
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ title }}</h1>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <!-- Botón para crear nueva categoría -->
+                    <button type="button" class="btn btn-secondary" data-toggle="modal"
+                        data-target="#createModalCategory">
+                        <i class="fas fa-plus"></i>
+                        Agregar Categoría
+                    </button>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="{{ table_id }}" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">
+                                            ID
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            NAME
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            EDIT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @each(category in categories)
+                                    <tr>
+                                        <td class="text-center align-middle">
+                                            {{ category.id }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ category.name }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a type="button" data-toggle="modal" data-target="#editModalCategory"
+                                                onclick="openEditModal({
+                                                            id: {
+                                                                element: 'categoryId',
+                                                                value: '{{ category.id }}'
+                                                            },
+                                                            name: {
+                                                                element: 'categoryName',
+                                                                value: '{{ category.name }}'
+                                                            }
+                                                        })">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @end
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+
+        <div class="modal fade" id="editModalCategory" tabindex="-1" aria-labelledby="editModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="editModalLabel">
+                            Editar registro
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('/categories') }}" method="POST" id="editCategoryForm">
+                        {{ csrfField() }}
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="categoryId">
+                            <div class="form-group">
+                                <label for="categoryName">
+                                    Nombre
+                                </label>
+                                <input type="text" class="form-control" id="categoryName" name="name" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-primary col-12">
+                                Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="createModalCategory" tabindex="-1" aria-labelledby="createModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="createModalLabel">
+                            Crear nuevo registro
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('/categories') }}" method="POST" id="createCategoryForm">
+                        {{ csrfField() }}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="categoryName">
+                                    Nombre
+                                </label>
+                                <input type="text" class="form-control" id="categoryName" name="name" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-primary col-12">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+@end
