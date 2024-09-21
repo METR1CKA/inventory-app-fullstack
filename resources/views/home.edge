@@ -1,182 +1,90 @@
 @layout('layout/app')
 
-@set('title', 'Inventory')
+@set('title', 'Inventario')
 
 @section('body')
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <div class="content-header">
+  <!-- Hero Section -->
+  <section class="content-header">
     <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1 class="m-0">Sales</h1>
-        </div><!-- /.col -->
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Sales</li>
-          </ol>
-        </div><!-- /.col -->
-      </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
-  </div>
-  <!-- /.content-header -->
+      <div class="row mb-2 justify-content-center">
+        <div class="col-sm-8 text-center">
+          <h1>¡Bienvenido a Inventario!</h1>
+          <p class="lead">Administra y organiza tus productos de manera sencilla y eficiente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Main content -->
-  <div class="content">
+  <section class="content">
+    <!-- Default box -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Bienvenido</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body mb-2">
+        <p>
+          ¡Hola {{ session.get('username') }}!
+        </p>
+        <p>
+          Nos alegra verte de nuevo. Esperamos que disfrutes usando nuestra aplicación para gestionar tu inventario.
+        </p>
+      </div>
+    </div>
+    <!-- /.card -->
+  </section>
+  <!-- /.content -->
+
+  <!-- Features Section -->
+  <section class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-11">
-          <div class="card">
-            <div class="card-header border-0">
-              <div class="d-flex justify-content-between">
-                <h3 class="card-title">Sales</h3>
-                <a href="javascript:void(0);">View Report</a>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="d-flex">
-                <p class="d-flex flex-column">
-                  <span class="text-bold text-lg">$18,230.00</span>
-                  <span>Sales Over Time</span>
-                </p>
-                <p class="ml-auto d-flex flex-column text-right">
-                  <span class="text-success">
-                    <i class="fas fa-arrow-up"></i> 33.1%
-                  </span>
-                  <span class="text-muted">Since last month</span>
-                </p>
-              </div>
-              <!-- /.d-flex -->
-
-              <div class="position-relative mb-4">
-                <canvas id="sales-chart" height="200"></canvas>
-              </div>
-
-              <div class="d-flex flex-row justify-content-end">
-                <span class="mr-2">
-                  <i class="fas fa-square text-primary"></i> This year
-                </span>
-
-                <span>
-                  <i class="fas fa-square text-gray"></i> Last year
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header border-0">
-              <h3 class="card-title">Products</h3>
-              <div class="card-tools">
-                <a href="#" class="btn btn-tool btn-sm">
-                  <i class="fas fa-download"></i>
-                </a>
-                <a href="#" class="btn btn-tool btn-sm">
-                  <i class="fas fa-bars"></i>
-                </a>
-              </div>
-            </div>
-            <div class="card-body table-responsive p-0">
-              <table class="table table-striped table-valign-middle">
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Sales</th>
-                    <th>More</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Some Product
-                    </td>
-                    <td>$13 USD</td>
-                    <td>
-                      <small class="text-success mr-1">
-                        <i class="fas fa-arrow-up"></i>
-                        12%
-                      </small>
-                      12,000 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Another Product
-                    </td>
-                    <td>$29 USD</td>
-                    <td>
-                      <small class="text-warning mr-1">
-                        <i class="fas fa-arrow-down"></i>
-                        0.5%
-                      </small>
-                      123,234 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Amazing Product
-                    </td>
-                    <td>$1,230 USD</td>
-                    <td>
-                      <small class="text-danger mr-1">
-                        <i class="fas fa-arrow-down"></i>
-                        3%
-                      </small>
-                      198 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img src="dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
-                      Perfect Item
-                      <span class="badge bg-danger">NEW</span>
-                    </td>
-                    <td>$199 USD</td>
-                    <td>
-                      <small class="text-success mr-1">
-                        <i class="fas fa-arrow-up"></i>
-                        63%
-                      </small>
-                      87 Sold
-                    </td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+        <div class="col-lg-4">
+          <!-- Feature Box 1 -->
+          <div class="card card-primary card-outline">
+            <div class="card-body text-center">
+              <i class="fas fa-boxes fa-3x"></i>
+              <h5 class="mt-3">Gestión de Inventario</h5>
+              <p>Monitorea, agrega y edita tus productos fácilmente.</p>
             </div>
           </div>
         </div>
-        <!-- /.col-md-6 -->
+
+        <div class="col-lg-4">
+          <!-- Feature Box 2 -->
+          <div class="card card-success card-outline">
+            <div class="card-body text-center">
+              <i class="fas fa-chart-line fa-3x"></i>
+              <h5 class="mt-3">Monitorea tu Inventario</h5>
+              <p>Monitorea tu inventario para un mejor control.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <!-- Feature Box 3 -->
+          <div class="card card-info card-outline">
+            <div class="card-body text-center">
+              <i class="fas fa-warehouse fa-3x"></i>
+              <h5 class="mt-3">Gestiona tu almacen</h5>
+              <p>Controla la gestión de tus productos dentro de tu almacen</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
-  </div>
-  <!-- /.content -->
+  </section>
 </div>
 <!-- /.content-wrapper -->
 @end

@@ -31,6 +31,7 @@ Route.group(() => {
 
 Route.group(() => {
   Route.get('/', 'HomeController.index').as('/')
+  Route.get('welcome', 'HomeController.show').as('welcome')
 
   Route.group(() => {
     Route.resource('categories', 'CategoriesController').as('categories')
@@ -38,3 +39,7 @@ Route.group(() => {
     Route.resource('entries', 'EntriesController').as('entries')
   }).namespace('App/Controllers/Http/Modules')
 }).middleware('auth:web')
+
+Route.any('*', async ({ view }) => {
+  return await view.render('errors/not-found')
+})

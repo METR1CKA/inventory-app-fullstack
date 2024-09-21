@@ -8,7 +8,7 @@
 import Env from '@ioc:Adonis/Core/Env'
 import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
-const connection_config = {
+const pg_connection = {
   host: Env.get('PG_HOST'),
   port: Env.get('PG_PORT'),
   user: Env.get('PG_USER'),
@@ -42,7 +42,7 @@ const databaseConfig: DatabaseConfig = {
     */
     pg: {
       client: 'pg',
-      connection: connection_config,
+      connection: pg_connection,
       migrations: {
         naturalSort: true,
         paths: [
@@ -63,7 +63,7 @@ const databaseConfig: DatabaseConfig = {
     },
     alters: {
       client: 'pg',
-      connection: connection_config,
+      connection: pg_connection,
       migrations: {
         naturalSort: true,
         paths: [

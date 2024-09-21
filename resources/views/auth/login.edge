@@ -19,7 +19,7 @@
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="{{ route('/') }}" class="h1"><b>Login</b> Inventario</a>
+      <a href="{{ route('/') }}" class="h1"><b>Inventario</b></a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Inicia sesión</p>
@@ -39,9 +39,9 @@
             </div>
           </div>
         </div>
-        <p class="text-red">
+        <span class="text-red">
           {{ flashMessages.get('errors.email[0]', '') }}
-        </p>
+        </span>
         <div class="input-group mb-3">
           <input
             type="password"
@@ -57,7 +57,7 @@
             </div>
           </div>
         </div>
-        <p class="text-red">
+        <p class="text-red col-12">
           {{ flashMessages.get('errors.password[0]', '') }}
           {{ flashMessages.get('error', '') }}
         </p>
