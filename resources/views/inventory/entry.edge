@@ -1,16 +1,16 @@
 @layout('layout/app')
 
-@set('title', 'Productos')
+@set('title', 'Entrada de inventario')
 
-@set('table_id', 'datatable-products')
+@set('table_id', 'datatable-entries')
 
-@set('edit_modal', 'editModalProduct')
+@set('edit_modal', 'editModalEntries')
 
-@set('create_modal', 'createModalProduct')
+@set('create_modal', 'createModalEntries')
 
 @set('select_id', 'categorySelect')
 
-@set('url', route('products.index'))
+@set('url', route('entries.index'))
 
 @section('body')
 <!-- Content Wrapper. Contains page content -->
@@ -23,10 +23,10 @@
                     <h1>{{ title }}</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <!-- Botón para crear nueva producto -->
+                    <!-- Botón para crear registrar entrada de inventario -->
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ create_modal }}">
                         <i class="fas fa-plus"></i>
-                        Agregar Producto
+                        Registrar entrada de inventario
                     </button>
                 </div>
             </div>
@@ -47,22 +47,43 @@
                                             ID
                                         </th>
                                         <th class="text-center align-middle">
-                                            NAME
-                                        </th>
-                                        <th class="text-center align-middle">
-                                            DESCRIPCIÓN
-                                        </th>
-                                        <th class="text-center align-middle">
-                                            STOCK
+                                            USUARIO
                                         </th>
                                         <th class="text-center align-middle">
                                             CATEGORIA
                                         </th>
                                         <th class="text-center align-middle">
-                                            FECHA DE CREACIÓN
+                                            PRODUCTO
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            PRESENTACIÓN
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            CANTIDAD EN PRESENTACIÓN
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            UNIDAD DE LA PRESENTACIÓN
                                         </th>
                                         <th class="text-center align-middle no-sort">
-                                            ACTIVE
+                                            CANTIDAD DE PRESENTACIONES
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            PESO DE UNIDAD EN PRESENTACIÓN
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            UNIDAD EN PRESENTACIÓN
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            CANTIDAD DE UNIDADES POR PRESENTACIÓN
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            CANTIDAD DE UNIDADES TOTAL
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            CANTIDAD TOTAL DEL PRODUCTO
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            FECHA DE REGISTRO
                                         </th>
                                         <th class="text-center align-middle no-sort">
                                             EDIT
@@ -70,35 +91,49 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @each(product in products)
+                                    @each(entry in entries)
                                     <tr>
                                         <td class="text-center align-middle">
-                                            {{ product.id }}
+                                            {{ entry.id }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ product.name }}
+                                            {{ entry.user.username }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ product.description ?? 'N/A' }}
+                                            {{ entry.product.category.name }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ product.stock }}
+                                            {{ entry.product.name }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ product.category.name }}
+                                            {{ entry.packaging_detail.packaging_type.name }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ format(product.createdAt) }}
+                                            {{ entry.packaging_detail.unit_quantity }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            <form id="deleteProductForm"
-                                                action="{{ route('products.destroy', { id: product.id }, { qs: { _method: 'DELETE' }}) }}"
-                                                method="post">
-                                                {{ csrfField() }}
-                                                <button type="submit" class="btn btn-link">
-                                                    <i class="fas fa-toggle-{{ product.active ? 'on' : 'off' }}"></i>
-                                                </button>
-                                            </form>
+                                            {{ entry.packaging_detail.unit.name }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ entry.quantity_packages }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ entry.weight_packages }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ entry.unit.name }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ entry.quantity_weight }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ entry.packages_total }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ entry.product_total }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ format(entry.createdAt) }}
                                         </td>
                                         <td class="text-center align-middle">
                                             <button class="btn btn-outline-primary" type="button" data-toggle="modal"
@@ -106,32 +141,8 @@
                                                             modal_id: '{{ edit_modal }}',
                                                             id: {
                                                                 element: 'productId',
-                                                                value: '{{ product.id }}'
+                                                                value: '{{ entry.id }}'
                                                             },
-                                                            name: {
-                                                                element: 'productName',
-                                                                value: '{{ product.name }}'
-                                                            },
-                                                            description: {
-                                                                element: 'productDescription',
-                                                                value: '{{ product.description }}'
-                                                            },
-                                                            stock: {
-                                                                element: 'productStock',
-                                                                value: '{{ product.stock }}'
-                                                            },
-                                                            category: {
-                                                                element: 'categorySelect',
-                                                                value: '{{ product.category.id }}',
-                                                                values: [
-                                                                    @each(category in categories)
-                                                                    {
-                                                                        id: {{ category.id }},
-                                                                        name: '{{ category.name }}'
-                                                                    },
-                                                                    @end
-                                                                ]
-                                                            }
                                                         })">
                                                 <i class="fas fa-edit"></i>
                                             </button>
@@ -151,7 +162,8 @@
         </div>
         <!-- /.container-fluid -->
 
-        <div class="modal fade" id="{{ edit_modal }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="{{ edit_modal }}" tabindex="-1" aria-labelledby="editModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -205,10 +217,10 @@
                 <!-- /.modal-content -->
             </div>
             <!-- /.modal-dialog -->
-        </div>
+        </div> --}}
         <!-- /.modal -->
 
-        <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
+        {{-- <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -263,7 +275,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- /.modal -->
     </section>
     <!-- /.content -->

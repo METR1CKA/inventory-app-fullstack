@@ -18,10 +18,14 @@ export default class PackagingDetail extends BaseModel {
     })
     public id: number
 
-    @column()
+    @column({
+        serializeAs: null,
+    })
     public packaging_type_id: number
 
-    @column()
+    @column({
+        serializeAs: null,
+    })
     public unit_id: number
 
     @column()
