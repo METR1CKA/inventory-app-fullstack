@@ -155,7 +155,7 @@
 
                 let id = form.find('input[name="id"]').val()
 
-                let formData = form.serialize().replace(/&?id=[^&]*/g, '')
+                let formData = form.serialize().replace(/&id=[^&]*/g, '')
 
                 showOverlay('{{ edit_modal }}')
 
@@ -167,7 +167,7 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'X-CSRF-TOKEN': '{{ csrfToken }}'
                     },
-                    success: function (response, x) {
+                    success: function (response) {
                         setTimeout(() => {
                             hideOverlay(modal_id)
                         }, 750)
@@ -187,20 +187,24 @@
                         }, 750)
                     },
                     error: function (xhr, status, error) {
+                        console.error('response: ', xhr.responseJSON)
+                        console.error('error: ', error)
+                        console.error('status: ', status)
+
                         setTimeout(() => {
                             hideOverlay(modal_id)
-                        }, 750)
+                        }, 950)
 
                         setTimeout(() => {
-                            console.error('response: ', xhr.responseJSON)
-                            console.error('error: ', error)
-                            console.error('status: ', status)
-
                             Toast.fire({
                                 icon: 'error',
                                 title: xhr.responseJSON.message,
                             })
-                        }, 750)
+                        }, 950)
+
+                        // setTimeout(() => {
+                        //     location.reload()
+                        // }, 2000)
                     }
                 })
             })

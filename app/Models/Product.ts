@@ -9,6 +9,7 @@ import {
 import Category from './Category'
 import { DateTime } from 'luxon'
 import Entry from './Entry'
+import FormatDates from 'App/Services/FormatDates'
 
 export default class Product extends BaseModel {
     @column({
@@ -16,7 +17,9 @@ export default class Product extends BaseModel {
     })
     public id: number
 
-    @column()
+    @column({
+        serializeAs: null,
+    })
     public category_id: number
 
     @column()
@@ -33,12 +36,14 @@ export default class Product extends BaseModel {
 
     @column.dateTime({
         autoCreate: true,
+        ...FormatDates.serializeDates(),
     })
     public createdAt: DateTime
 
     @column.dateTime({
         autoCreate: true,
         autoUpdate: true,
+        ...FormatDates.serializeDates(),
     })
     public updatedAt: DateTime
 

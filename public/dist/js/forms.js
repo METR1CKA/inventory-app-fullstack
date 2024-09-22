@@ -28,7 +28,20 @@ function openEditModal(data) {
         let field = _data[key]
         let inputElement = document.getElementById(field.element)
         if (inputElement) {
-            inputElement.value = field.value
+            if (field.value != 'null') {
+                inputElement.value = field.value
+            }
+            if (inputElement.tagName === 'SELECT') {
+                if (field.values) {
+                    field.values.forEach((optionData) => {
+                        let option = document.createElement('option')
+                        option.value = optionData.id
+                        option.text = optionData.name
+                        inputElement.appendChild(option)
+                    })
+                }
+                inputElement.value = field.value
+            }
         }
     }
 

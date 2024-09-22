@@ -22,8 +22,7 @@
                 </div>
                 <div class="col-sm-6 text-right">
                     <!-- Botón para crear nueva categoría -->
-                    <button type="button" class="btn btn-secondary" data-toggle="modal"
-                        data-target="#{{ create_modal }}">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ create_modal }}">
                         <i class="fas fa-plus"></i>
                         Agregar Categoría
                     </button>
@@ -76,8 +75,8 @@
                                             </form>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <a type="button" data-toggle="modal" data-target="#{{ edit_modal }}"
-                                                onclick="openEditModal({
+                                            <button class="btn btn-outline-primary" type="button" data-toggle="modal"
+                                                data-target="#{{ edit_modal }}" onclick="openEditModal({
                                                             modal_id: '{{ edit_modal }}',
                                                             id: {
                                                                 element: 'categoryId',
@@ -89,7 +88,7 @@
                                                             }
                                                         })">
                                                 <i class="fas fa-edit"></i>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                     @end

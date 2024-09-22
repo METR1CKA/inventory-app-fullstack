@@ -1,0 +1,275 @@
+@layout('layout/app')
+
+@set('title', 'Productos')
+
+@set('table_id', 'datatable-products')
+
+@set('edit_modal', 'editModalProduct')
+
+@set('create_modal', 'createModalProduct')
+
+@set('select_id', 'categorySelect')
+
+@set('url', route('products.index'))
+
+@section('body')
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ title }}</h1>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <!-- Botón para crear nueva producto -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ create_modal }}">
+                        <i class="fas fa-plus"></i>
+                        Agregar Producto
+                    </button>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="{{ table_id }}" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">
+                                            ID
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            NAME
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            DESCRIPCIÓN
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            STOCK
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            CATEGORIA
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            CREADO
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            ACTIVE
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            EDIT
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @each(product in products)
+                                    <tr>
+                                        <td class="text-center align-middle">
+                                            {{ product.id }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ product.name }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ product.description ?? 'N/A' }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ product.stock }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ product.category.name }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ format(product.createdAt) }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <form id="deleteProductForm"
+                                                action="{{ route('products.destroy', { id: product.id }, { qs: { _method: 'DELETE' }}) }}"
+                                                method="post">
+                                                {{ csrfField() }}
+                                                <button type="submit" class="btn btn-link">
+                                                    <i class="fas fa-toggle-{{ product.active ? 'on' : 'off' }}"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <button class="btn btn-outline-primary" type="button" data-toggle="modal"
+                                                data-target="#{{ edit_modal }}" onclick="openEditModal({
+                                                            modal_id: '{{ edit_modal }}',
+                                                            id: {
+                                                                element: 'productId',
+                                                                value: '{{ product.id }}'
+                                                            },
+                                                            name: {
+                                                                element: 'productName',
+                                                                value: '{{ product.name }}'
+                                                            },
+                                                            description: {
+                                                                element: 'productDescription',
+                                                                value: '{{ product.description }}'
+                                                            },
+                                                            stock: {
+                                                                element: 'productStock',
+                                                                value: '{{ product.stock }}'
+                                                            },
+                                                            category: {
+                                                                element: 'categorySelect',
+                                                                value: '{{ product.category.id }}',
+                                                                values: [
+                                                                    @each(category in categories)
+                                                                    {
+                                                                        id: {{ category.id }},
+                                                                        name: '{{ category.name }}'
+                                                                    },
+                                                                    @end
+                                                                ]
+                                                            }
+                                                        })">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @end
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+
+        <div class="modal fade" id="{{ edit_modal }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="editModalLabel">
+                            Editar products
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="editProductForm">
+                        {{ csrfField() }}
+                        <div class="modal-body">
+                            <input type="hidden" name="id" id="productId">
+                            <div class="form-group">
+                                <label for="productName">
+                                    Nombre
+                                </label>
+                                <input type="text" class="form-control" id="productName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productDescription">
+                                    Descripción
+                                </label>
+                                <input type="text" class="form-control" id="productDescription" name="description">
+                            </div>
+                            <div class="form-group">
+                                <label for="productStock">
+                                    Stock
+                                </label>
+                                <input type="number" class="form-control" id="productStock" name="stock" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="categorySelect">
+                                    Categoria
+                                </label>
+                                <select name="category_id" id="{{ select_id }}" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione una categoría
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="submit" class="btn btn-primary col-12">
+                                Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="createModalLabel">
+                            Crear productos
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="createProductForm">
+                        {{ csrfField() }}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="productName">
+                                    Nombre
+                                </label>
+                                <input type="text" class="form-control" id="productName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productDescription">
+                                    Descripción
+                                </label>
+                                <input type="text" class="form-control" id="productDescription" name="description">
+                            </div>
+                            <div class="form-group">
+                                <label for="productStock">
+                                    Stock
+                                </label>
+                                <input type="number" class="form-control" id="productStock" name="stock" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="categorySelect">
+                                    Categoria
+                                </label>
+                                <select name="category_id" id="{{ select_id }}" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione una categoría
+                                    </option>
+                                    @each(category in categories)
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                    @end
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="submit" class="btn btn-primary col-12">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<script>
+
+</script>
+@end

@@ -4,9 +4,12 @@ import Category from 'App/Models/Category'
 import { ValidatorException } from 'App/Exceptions/ValidatorException'
 
 export default class CategoriesController {
+    private categories = Category.query().orderBy('id', 'desc')
+
     public async index({ view }: HttpContextContract) {
-        const categories = await Category.all()
-        return view.render('inventory/category', { categories })
+        const categories = await this.categories
+
+        return await view.render('inventory/category', { categories })
     }
 
     public async store({ session, request, response }: HttpContextContract) {
@@ -70,7 +73,6 @@ export default class CategoriesController {
         const category = await Category.find(params.id)
 
         if (!category) {
-            session.flash('error-toast', 'Categoría no encontrada')
             return response.redirect().clearQs().back()
         }
 
