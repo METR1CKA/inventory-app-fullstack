@@ -111,31 +111,39 @@
                         'X-CSRF-TOKEN': '{{ csrfToken }}'
                     },
                     success: function (response) {
-                        hideOverlay('{{ create_modal }}')
+                        setTimeout(() => {
+                            hideOverlay(modal_id)
+                        }, 750)
 
-                        if (response.status != 'Error') {
-                            $('#{{ create_modal }}').modal('hide')
-                            location.reload()
-                        }
+                        setTimeout(() => {
+                            if (response.status != 'Error') {
+                                $('#{{ create_modal }}').modal('hide')
+                                location.reload()
+                            }
 
-                        if (response.status == 'Error') {
-                            Toast.fire({
-                                icon: 'error',
-                                title: response.message,
-                            })
-                        }
+                            if (response.status == 'Error') {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.message,
+                                })
+                            }
+                        }, 750)
                     },
                     error: function (xhr, status, error) {
-                        hideOverlay('{{ create_modal }}')
+                        setTimeout(() => {
+                            hideOverlay(modal_id)
+                        }, 750)
 
-                        console.error('response: ', xhr.responseJSON)
-                        console.error('error: ', error)
-                        console.error('status: ', status)
+                        setTimeout(() => {
+                            console.error('response: ', xhr.responseJSON)
+                            console.error('error: ', error)
+                            console.error('status: ', status)
 
-                        Toast.fire({
-                            icon: 'error',
-                            title: xhr.responseJSON.message,
-                        })
+                            Toast.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON.message,
+                            })
+                        }, 750)
                     }
                 })
             })
@@ -160,31 +168,39 @@
                         'X-CSRF-TOKEN': '{{ csrfToken }}'
                     },
                     success: function (response, x) {
-                        hideOverlay('{{ edit_modal }}')
+                        setTimeout(() => {
+                            hideOverlay(modal_id)
+                        }, 750)
 
-                        if (response.status != 'Error') {
-                            $('#{{ edit_modal }}').modal('hide')
-                            location.reload()
-                        }
+                        setTimeout(() => {
+                            if (response.status != 'Error') {
+                                $('#{{ edit_modal }}').modal('hide')
+                                location.reload()
+                            }
 
-                        if (response.status == 'Error') {
-                            Toast.fire({
-                                icon: 'error',
-                                title: response.message,
-                            })
-                        }
+                            if (response.status == 'Error') {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.message,
+                                })
+                            }
+                        }, 750)
                     },
                     error: function (xhr, status, error) {
-                        hideOverlay('{{ edit_modal }}')
+                        setTimeout(() => {
+                            hideOverlay(modal_id)
+                        }, 750)
 
-                        console.error('response: ', xhr.responseJSON)
-                        console.error('error: ', error)
-                        console.error('status: ', status)
+                        setTimeout(() => {
+                            console.error('response: ', xhr.responseJSON)
+                            console.error('error: ', error)
+                            console.error('status: ', status)
 
-                        Toast.fire({
-                            icon: 'error',
-                            title: xhr.responseJSON.message,
-                        })
+                            Toast.fire({
+                                icon: 'error',
+                                title: xhr.responseJSON.message,
+                            })
+                        }, 750)
                     }
                 })
             })
