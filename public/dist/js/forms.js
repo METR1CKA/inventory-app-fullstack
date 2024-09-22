@@ -35,5 +35,5 @@ function openEditModal(data) {
     showOverlay(modal_id)
     setTimeout(() => {
         hideOverlay(modal_id)
-    }, 950)
+    }, 750)
 }
