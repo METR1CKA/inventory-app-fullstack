@@ -9,7 +9,7 @@ export default class CategoriesController {
         return view.render('inventory/category', { categories })
     }
 
-    public async store({ request, response }: HttpContextContract) {
+    public async store({ session, request, response }: HttpContextContract) {
         try {
             await request.validate(CategoryValidator)
         } catch (error) {
@@ -21,6 +21,8 @@ export default class CategoriesController {
 
         await Category.create(data)
 
+        session.flash('success-toast', 'Categoría creada')
+
         return response.created({
             status: 'Success',
             message: 'Categoría creada',
@@ -28,7 +30,12 @@ export default class CategoriesController {
         })
     }
 
-    public async update({ params, request, response }: HttpContextContract) {
+    public async update({
+        session,
+        params,
+        request,
+        response,
+    }: HttpContextContract) {
         try {
             await request.validate(CategoryValidator)
         } catch (error) {
@@ -49,6 +56,8 @@ export default class CategoriesController {
         const data = request.only(['name'])
 
         await category.merge(data).save()
+
+        session.flash('success-toast', 'Categoría actualizada')
 
         return response.ok({
             status: 'Success',

@@ -110,19 +110,20 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'X-CSRF-TOKEN': '{{ csrfToken }}'
                     },
-                    success: function (response, x) {
+                    success: function (response) {
                         hideOverlay('{{ create_modal }}')
 
-                        $('#{{ create_modal }}').modal('hide')
-
-                        Toast.fire({
-                            icon: 'success',
-                            title: response.message,
-                        })
-
-                        setTimeout(() => {
+                        if (response.status != 'Error') {
+                            $('#{{ create_modal }}').modal('hide')
                             location.reload()
-                        }, 2000)
+                        }
+
+                        if (response.status == 'Error') {
+                            Toast.fire({
+                                icon: 'error',
+                                title: response.message,
+                            })
+                        }
                     },
                     error: function (xhr, status, error) {
                         hideOverlay('{{ create_modal }}')
@@ -161,16 +162,17 @@
                     success: function (response, x) {
                         hideOverlay('{{ edit_modal }}')
 
-                        $('#{{ edit_modal }}').modal('hide')
-
-                        Toast.fire({
-                            icon: 'success',
-                            title: response.message,
-                        })
-
-                        setTimeout(() => {
+                        if (response.status != 'Error') {
+                            $('#{{ edit_modal }}').modal('hide')
                             location.reload()
-                        }, 2000)
+                        }
+
+                        if (response.status == 'Error') {
+                            Toast.fire({
+                                icon: 'error',
+                                title: response.message,
+                            })
+                        }
                     },
                     error: function (xhr, status, error) {
                         hideOverlay('{{ edit_modal }}')
@@ -187,8 +189,8 @@
                 })
             })
 
-            const success_toast = "{{ flashMessages.get('success-toast') }}"
-            const error_toast = "{{ flashMessages.get('error-toast') }}"
+            let success_toast = "{{ flashMessages.get('success-toast') }}"
+            let error_toast = "{{ flashMessages.get('error-toast') }}"
 
             if (success_toast != "undefined") {
                 Toast.fire({
