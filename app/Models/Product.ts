@@ -28,6 +28,9 @@ export default class Product extends BaseModel {
     @column()
     public stock: number
 
+    @column()
+    public active: boolean
+
     @column.dateTime({
         autoCreate: true,
     })

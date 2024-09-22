@@ -4,6 +4,12 @@
 
 @set('table_id', 'datatable-categories')
 
+@set('edit_modal', 'editModalCategory')
+
+@set('create_modal', 'createModalCategory')
+
+@set('url', route('categories.index'))
+
 @section('body')
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -17,7 +23,7 @@
                 <div class="col-sm-6 text-right">
                     <!-- Botón para crear nueva categoría -->
                     <button type="button" class="btn btn-secondary" data-toggle="modal"
-                        data-target="#createModalCategory">
+                        data-target="#{{ create_modal }}">
                         <i class="fas fa-plus"></i>
                         Agregar Categoría
                     </button>
@@ -43,6 +49,9 @@
                                             NAME
                                         </th>
                                         <th class="text-center align-middle no-sort">
+                                            ACTIVE
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
                                             EDIT
                                         </th>
                                     </tr>
@@ -57,8 +66,19 @@
                                             {{ category.name }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            <a type="button" data-toggle="modal" data-target="#editModalCategory"
+                                            <form id="deleteCategoryForm"
+                                                action="{{ route('categories.destroy', { id: category.id }, { qs: { _method: 'DELETE' }}) }}"
+                                                method="post">
+                                                {{ csrfField() }}
+                                                <button type="submit" class="btn btn-link">
+                                                    <i class="fas fa-toggle-{{ category.active ? 'on' : 'off' }}"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a type="button" data-toggle="modal" data-target="#{{ edit_modal }}"
                                                 onclick="openEditModal({
+                                                            modal_id: '{{ edit_modal }}',
                                                             id: {
                                                                 element: 'categoryId',
                                                                 value: '{{ category.id }}'
@@ -86,19 +106,18 @@
         </div>
         <!-- /.container-fluid -->
 
-        <div class="modal fade" id="editModalCategory" tabindex="-1" aria-labelledby="editModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="{{ edit_modal }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="editModalLabel">
-                            Editar registro
+                            Editar categoria
                         </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('/categories') }}" method="POST" id="editCategoryForm">
+                    <form id="editCategoryForm">
                         {{ csrfField() }}
                         <div class="modal-body">
                             <input type="hidden" name="id" id="categoryId">
@@ -110,7 +129,7 @@
                             </div>
                         </div>
                         <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-primary col-12">
+                            <button type="submit" class="btn btn-primary col-12">
                                 Guardar cambios
                             </button>
                         </div>
@@ -122,19 +141,19 @@
         </div>
         <!-- /.modal -->
 
-        <div class="modal fade" id="createModalCategory" tabindex="-1" aria-labelledby="createModalLabel"
+        <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="createModalLabel">
-                            Crear nuevo registro
+                            Crear categoria
                         </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('/categories') }}" method="POST" id="createCategoryForm">
+                    <form id="createCategoryForm">
                         {{ csrfField() }}
                         <div class="modal-body">
                             <div class="form-group">
@@ -145,7 +164,7 @@
                             </div>
                         </div>
                         <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-primary col-12">
+                            <button type="submit" class="btn btn-primary col-12">
                                 Guardar
                             </button>
                         </div>

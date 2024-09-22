@@ -10,6 +10,9 @@ export default class Category extends BaseModel {
     @column()
     public name: string
 
+    @column()
+    public active: boolean
+
     // Relaciones
     @hasMany(() => Product, {
         localKey: 'id',
