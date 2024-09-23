@@ -22,7 +22,9 @@ export default class EntriesController {
 
         const units = await Unit.all()
 
-        const products = await Product.query().where({ active: true })
+        const products = await Product.query()
+            .where({ active: true })
+            .orderBy('id', 'desc')
 
         const packaging_types = await PackagingType.all()
 

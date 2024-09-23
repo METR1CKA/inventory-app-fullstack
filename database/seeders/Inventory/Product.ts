@@ -136,7 +136,7 @@ export default class extends BaseSeeder {
 
             let qp = getRandomNumberInRange({
                 min: 1,
-                max: 30,
+                max: 10,
                 isDecimal: false,
             })
 
