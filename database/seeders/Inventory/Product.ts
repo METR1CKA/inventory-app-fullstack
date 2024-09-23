@@ -1,4 +1,4 @@
-import { getRandomNumberInRange } from 'App/Services/Numbers'
+import { getRandomNumberInRange } from 'App/Services/Functions'
 import PackagingDetail from 'App/Models/PackagingDetail'
 import PackagingType from 'App/Models/PackagingType'
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
