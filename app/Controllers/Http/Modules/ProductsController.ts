@@ -4,6 +4,7 @@ import Category from 'App/Models/Category'
 import Product from 'App/Models/Product'
 import ProductValidator from 'App/Validators/Inventory/Product/ProductValidator'
 import { ValidatorException } from 'App/Exceptions/ValidatorException'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class ProductsController {
     public async index({ view }: HttpContextContract) {
@@ -37,7 +38,23 @@ export default class ProductsController {
             'stock',
         ])
 
-        await Product.create(data)
+        const trx = await Database.transaction()
+
+        try {
+            await Product.create(data)
+
+            await trx.commit()
+        } catch (error) {
+            console.error(error)
+
+            await trx.rollback()
+
+            return response.internalServerError({
+                status: 'Error',
+                message: 'Error al crear el producto',
+                data: null,
+            })
+        }
 
         session.flash('success-toast', 'Producto creado')
 
@@ -78,7 +95,23 @@ export default class ProductsController {
             'stock',
         ])
 
-        await product.merge(data).save()
+        const trx = await Database.transaction()
+
+        try {
+            await product.merge(data).save()
+
+            await trx.commit()
+        } catch (error) {
+            console.error(error)
+
+            await trx.rollback()
+
+            return response.internalServerError({
+                status: 'Error',
+                message: 'Error al actualizar el producto',
+                data: null,
+            })
+        }
 
         session.flash('success-toast', 'Producto actualizado')
 
@@ -96,7 +129,25 @@ export default class ProductsController {
             return response.redirect().clearQs().back()
         }
 
-        await product.merge({ active: !product.active }).save()
+        const trx = await Database.transaction()
+
+        try {
+            await product.merge({ active: !product.active }).save()
+
+            await trx.commit()
+        } catch (error) {
+            console.error(error)
+
+            await trx.rollback()
+
+            return response.internalServerError({
+                status: 'Error',
+                message: `Error al ${
+                    product.active ? 'desactivar' : 'activar'
+                } el producto`,
+                data: null,
+            })
+        }
 
         session.flash(
             'success-toast',

@@ -8,8 +8,6 @@
 
 @set('create_modal', 'createModalEntries')
 
-@set('select_id', 'categorySelect')
-
 @set('url', route('entries.index'))
 
 @section('body')
@@ -26,7 +24,7 @@
                     <!-- Botón para crear registrar entrada de inventario -->
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ create_modal }}">
                         <i class="fas fa-plus"></i>
-                        Registrar entrada de inventario
+                        Registrar Entrada de Inventario
                     </button>
                 </div>
             </div>
@@ -40,7 +38,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <table id="{{ table_id }}" class="table table-bordered table-striped">
+                            <table id="{{ table_id }}" class="table table-bordered table-striped table-sm">
                                 <thead>
                                     <tr>
                                         <th class="text-center align-middle">
@@ -86,7 +84,7 @@
                                             FECHA DE REGISTRO
                                         </th>
                                         <th class="text-center align-middle no-sort">
-                                            EDIT
+                                            EDITAR
                                         </th>
                                     </tr>
                                 </thead>
@@ -121,7 +119,7 @@
                                             {{ entry.weight_packages }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ entry.unit.name }}
+                                            {{ entry.unit_package.name }}
                                         </td>
                                         <td class="text-center align-middle">
                                             {{ entry.quantity_weight }}
@@ -220,51 +218,95 @@
         </div> --}}
         <!-- /.modal -->
 
-        {{-- <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
+        <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="createModalLabel">
-                            Crear productos
+                            Ingresar Entrada de Inventario
                         </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="createProductForm">
+                    <form id="createEntryForm">
                         {{ csrfField() }}
                         <div class="modal-body">
+                            <!-- Foreing keys -->
                             <div class="form-group">
-                                <label for="productName">
-                                    Nombre
+                                <label for="unitPackageSelect">
+                                    Unidad en presentación
                                 </label>
-                                <input type="text" class="form-control" id="productName" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productDescription">
-                                    Descripción
-                                </label>
-                                <input type="text" class="form-control" id="productDescription" name="description">
-                            </div>
-                            <div class="form-group">
-                                <label for="productStock">
-                                    Stock
-                                </label>
-                                <input type="number" class="form-control" id="productStock" name="stock" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="categorySelect">
-                                    Categoria
-                                </label>
-                                <select name="category_id" id="{{ select_id }}" class="custom-select" required>
+                                <select name="unit_package_id" id="unitPackageSelect" class="custom-select" required>
                                     <option value="" disabled selected>
-                                        Seleccione una categoría
+                                        Seleccione la unidad en presentación
                                     </option>
-                                    @each(category in categories)
-                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                    @each(unit_package in unit_packages)
+                                    <option value="{{ unit_package.id }}">{{ unit_package.name }}</option>
                                     @end
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productSelect">
+                                    Producto
+                                </label>
+                                <select name="product_id" id="productSelect" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione el producto
+                                    </option>
+                                    @each(product in products)
+                                    <option value="{{ product.id }}">{{ product.name }}</option>
+                                    @end
+                                </select>
+                            </div>
+                            <!-- Packaging details -->
+                            <div class="form-group">
+                                <label for="unitQuantity">
+                                    Cantidad en presentación
+                                </label>
+                                <input type="number" class="form-control" id="unitQuantity" name="unit_quantity"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="packagingType">
+                                    Presentación
+                                </label>
+                                <select name="packaging_type_id" id="packagingType" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione la presentación
+                                    </option>
+                                    @each(packaging_type in packaging_types)
+                                    <option value="{{ packaging_type.id }}">{{ packaging_type.name }}</option>
+                                    @end
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="unit">
+                                    Unidad de la presentación
+                                </label>
+                                <select name="unit_id" id="unit" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione la unidad de la presentación
+                                    </option>
+                                    @each(unit in units)
+                                    <option value="{{ unit.id }}">{{ unit.name }}</option>
+                                    @end
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="quantityPackages">
+                                    Cantidad de presentaciones
+                                </label>
+                                <input type="number" class="form-control" id="quantityPackages" name="quantity_packages"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="weightPackages">
+                                    Peso de unidad en presentación
+                                </label>
+                                <input type="number" class="form-control" id="weightPackages" name="weight_packages"
+                                    required step="0.01">
                             </div>
                         </div>
                         <div class="modal-footer justify-content-between">
@@ -275,13 +317,10 @@
                     </form>
                 </div>
             </div>
-        </div> --}}
+        </div>
         <!-- /.modal -->
     </section>
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<script>
-
-</script>
 @end

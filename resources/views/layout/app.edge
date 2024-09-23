@@ -98,16 +98,25 @@
             $('#{{ create_modal }}').submit(function (event) {
                 event.preventDefault()
 
-                let formData = $(event.target).serialize()
+                let form = $(event.target)
+
+                let formData = {}
+
+                form.find('input, select, textarea').each(function () {
+                    let input = $(this)
+                    let name = input.attr('name')
+                    let value = input.val()
+                    if (name) formData[name] = value
+                })
 
                 showOverlay('{{ create_modal }}')
 
                 $.ajax({
                     url: '{{ url }}',
                     method: 'POST',
-                    data: formData,
+                    data: JSON.stringify(formData),
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrfToken }}'
                     },
                     success: function (response) {
@@ -155,16 +164,23 @@
 
                 let id = form.find('input[name="id"]').val()
 
-                let formData = form.serialize().replace(/&id=[^&]*/g, '')
+                let formData = {}
+
+                form.find('input, select, textarea').each(function () {
+                    let input = $(this)
+                    let name = input.attr('name')
+                    let value = input.val()
+                    if (name && name != 'id') formData[name] = value
+                })
 
                 showOverlay('{{ edit_modal }}')
 
                 $.ajax({
                     url: `{{ url }}/${id}`,
                     method: 'PUT',
-                    data: formData,
+                    data: JSON.stringify(formData),
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrfToken }}'
                     },
                     success: function (response) {
@@ -201,10 +217,6 @@
                                 title: xhr.responseJSON.message,
                             })
                         }, 950)
-
-                        // setTimeout(() => {
-                        //     location.reload()
-                        // }, 2000)
                     }
                 })
             })

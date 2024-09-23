@@ -26,12 +26,15 @@ function openEditModal(data) {
 
     for (let key in _data) {
         let field = _data[key]
+
         let inputElement = document.getElementById(field.element)
+
         if (inputElement) {
             if (field.value != 'null') {
                 inputElement.value = field.value
             }
-            if (inputElement.tagName === 'SELECT') {
+
+            if (inputElement.tagName == 'SELECT') {
                 if (field.values) {
                     field.values.forEach((optionData) => {
                         let option = document.createElement('option')
@@ -40,12 +43,14 @@ function openEditModal(data) {
                         inputElement.appendChild(option)
                     })
                 }
+
                 inputElement.value = field.value
             }
         }
     }
 
     showOverlay(modal_id)
+
     setTimeout(() => {
         hideOverlay(modal_id)
     }, 750)

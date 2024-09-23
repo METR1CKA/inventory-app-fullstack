@@ -2,6 +2,7 @@ import CategoryValidator from 'App/Validators/Inventory/Category/CategoryValidat
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Category from 'App/Models/Category'
 import { ValidatorException } from 'App/Exceptions/ValidatorException'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class CategoriesController {
     private categories = Category.query().orderBy('id', 'desc')
@@ -22,7 +23,23 @@ export default class CategoriesController {
 
         const data = request.only(['name'])
 
-        await Category.create(data)
+        const trx = await Database.transaction()
+
+        try {
+            await Category.create(data)
+
+            await trx.commit()
+        } catch (error) {
+            console.error(error)
+
+            await trx.rollback()
+
+            return response.internalServerError({
+                status: 'Error',
+                message: 'Error al crear la categoría',
+                data: null,
+            })
+        }
 
         session.flash('success-toast', 'Categoría creada')
 
@@ -58,7 +75,23 @@ export default class CategoriesController {
 
         const data = request.only(['name'])
 
-        await category.merge(data).save()
+        const trx = await Database.transaction()
+
+        try {
+            await category.merge(data).save()
+
+            await trx.commit()
+        } catch (error) {
+            console.error(error)
+
+            await trx.rollback()
+
+            return response.internalServerError({
+                status: 'Error',
+                message: 'Error al actualizar la categoría',
+                data: null,
+            })
+        }
 
         session.flash('success-toast', 'Categoría actualizada')
 
@@ -76,7 +109,25 @@ export default class CategoriesController {
             return response.redirect().clearQs().back()
         }
 
-        await category.merge({ active: !category.active }).save()
+        const trx = await Database.transaction()
+
+        try {
+            await category.merge({ active: !category.active }).save()
+
+            await trx.commit()
+        } catch (error) {
+            console.error(error)
+
+            await trx.rollback()
+
+            return response.internalServerError({
+                status: 'Error',
+                message: `Error al ${
+                    category.active ? 'desactivar' : 'activar'
+                } la categoría`,
+                data: null,
+            })
+        }
 
         session.flash(
             'success-toast',

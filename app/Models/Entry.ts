@@ -85,5 +85,5 @@ export default class Entry extends BaseModel {
         localKey: 'id',
         foreignKey: 'unit_package_id',
     })
-    public unit: BelongsTo<typeof Unit>
+    public unit_package: BelongsTo<typeof Unit>
 }
