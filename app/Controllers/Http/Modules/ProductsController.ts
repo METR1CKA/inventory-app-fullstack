@@ -1,13 +1,13 @@
+import ProductValidator from 'App/Validators/Inventory/Product/ProductValidator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { ValidatorException } from 'App/Exceptions/ValidatorException'
 import FormatDates from 'App/Services/FormatDates'
+import Database from '@ioc:Adonis/Lucid/Database'
 import Category from 'App/Models/Category'
 import Product from 'App/Models/Product'
-import ProductValidator from 'App/Validators/Inventory/Product/ProductValidator'
-import { ValidatorException } from 'App/Exceptions/ValidatorException'
-import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class ProductsController {
-    public async index({ view }: HttpContextContract) {
+    public async index({ session, view }: HttpContextContract) {
         const products = await Product.query()
             .preload('category')
             .orderBy('id', 'desc')
@@ -15,6 +15,8 @@ export default class ProductsController {
         const categories = await Category.query()
             .where({ active: true })
             .orderBy('id', 'desc')
+
+        session.put('success-toast', 'Productos obtenidos con éxito')
 
         return await view.render('inventory/product', {
             products,
@@ -56,7 +58,7 @@ export default class ProductsController {
             })
         }
 
-        session.flash('success-toast', 'Producto creado')
+        session.put('success-toast', 'Producto creado')
 
         return response.created({
             status: 'Success',
@@ -113,7 +115,7 @@ export default class ProductsController {
             })
         }
 
-        session.flash('success-toast', 'Producto actualizado')
+        session.put('success-toast', 'Producto actualizado')
 
         return response.ok({
             status: 'Success',
@@ -149,7 +151,7 @@ export default class ProductsController {
             })
         }
 
-        session.flash(
+        session.put(
             'success-toast',
             `Producto ${product.active ? 'activado' : 'desactivado'}`,
         )

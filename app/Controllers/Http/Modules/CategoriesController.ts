@@ -1,14 +1,16 @@
 import CategoryValidator from 'App/Validators/Inventory/Category/CategoryValidator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Category from 'App/Models/Category'
 import { ValidatorException } from 'App/Exceptions/ValidatorException'
 import Database from '@ioc:Adonis/Lucid/Database'
+import Category from 'App/Models/Category'
 
 export default class CategoriesController {
     private categories = Category.query().orderBy('id', 'desc')
 
-    public async index({ view }: HttpContextContract) {
+    public async index({ session, view }: HttpContextContract) {
         const categories = await this.categories
+
+        session.put('success-toast', 'Categorias obtenidas con éxito')
 
         return await view.render('inventory/category', { categories })
     }
@@ -41,7 +43,7 @@ export default class CategoriesController {
             })
         }
 
-        session.flash('success-toast', 'Categoría creada')
+        session.put('success-toast', 'Categoría creada')
 
         return response.created({
             status: 'Success',
@@ -93,7 +95,7 @@ export default class CategoriesController {
             })
         }
 
-        session.flash('success-toast', 'Categoría actualizada')
+        session.put('success-toast', 'Categoría actualizada')
 
         return response.ok({
             status: 'Success',
@@ -129,7 +131,7 @@ export default class CategoriesController {
             })
         }
 
-        session.flash(
+        session.put(
             'success-toast',
             `Categoría ${category.active ? 'activada' : 'desactivada'}`,
         )

@@ -79,7 +79,7 @@
                                             {{ product.name }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ product.description ?? 'N/A' }}
+                                            {{ !product.description ?? 'N/A' }}
                                         </td>
                                         <td class="text-center align-middle">
                                             {{ product.stock }}
@@ -122,7 +122,7 @@
                                                             },
                                                             category: {
                                                                 element: 'categorySelect',
-                                                                value: '{{ product.category.id }}',
+                                                                value: {{ product.category.id }},
                                                                 values: [
                                                                     @each(category in categories)
                                                                     {

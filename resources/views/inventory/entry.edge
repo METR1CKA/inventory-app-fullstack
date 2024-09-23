@@ -138,9 +138,69 @@
                                                 data-target="#{{ edit_modal }}" onclick="openEditModal({
                                                             modal_id: '{{ edit_modal }}',
                                                             id: {
-                                                                element: 'productId',
+                                                                element: 'entryId',
                                                                 value: '{{ entry.id }}'
                                                             },
+                                                            unit_package: {
+                                                                element: 'unitPackageSelect',
+                                                                value: {{ entry.unit_package.id }},
+                                                                values: [
+                                                                    @each(unit_package in unit_packages)
+                                                                    {
+                                                                        id: {{ unit_package.id }},
+                                                                        name: '{{ unit_package.name }}'
+                                                                    },
+                                                                    @end
+                                                                ]
+                                                            },
+                                                            product: {
+                                                                element: 'productSelect',
+                                                                value: {{ entry.product.id }},
+                                                                values: [
+                                                                    @each(product in products)
+                                                                    {
+                                                                        id: {{ product.id }},
+                                                                        name: '{{ product.name }}'
+                                                                    },
+                                                                    @end
+                                                                ]
+                                                            },
+                                                            unit_quantity: {
+                                                                element: 'unitQuantity',
+                                                                value: {{ entry.packaging_detail.unit_quantity }}
+                                                            },
+                                                            packaging_type: {
+                                                                element: 'packagingType',
+                                                                value: {{ entry.packaging_detail.packaging_type.id }},
+                                                                values: [
+                                                                    @each(packaging_type in packaging_types)
+                                                                    {
+                                                                        id: {{ packaging_type.id }},
+                                                                        name: '{{ packaging_type.name }}'
+                                                                    },
+                                                                    @end
+                                                                ]
+                                                            },
+                                                            unit: {
+                                                                element: 'unit',
+                                                                value: {{ entry.packaging_detail.unit.id }},
+                                                                values: [
+                                                                    @each(unit in units)
+                                                                    {
+                                                                        id: {{ unit.id }},
+                                                                        name: '{{ unit.name }}'
+                                                                    },
+                                                                    @end
+                                                                ]
+                                                            },
+                                                            quantity_packages: {
+                                                                element: 'quantityPackages',
+                                                                value: {{ entry.quantity_packages }}
+                                                            },
+                                                            weightPackages: {
+                                                                element: 'weightPackages',
+                                                                value: {{ entry.weight_packages }}
+                                                            }
                                                         })">
                                                 <i class="fas fa-edit"></i>
                                             </button>
@@ -160,49 +220,84 @@
         </div>
         <!-- /.container-fluid -->
 
-        {{-- <div class="modal fade" id="{{ edit_modal }}" tabindex="-1" aria-labelledby="editModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="{{ edit_modal }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="editModalLabel">
-                            Editar products
+                            Editar Entrada de Productos
                         </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="editProductForm">
+                    <form id="editEntryForm">
                         {{ csrfField() }}
                         <div class="modal-body">
-                            <input type="hidden" name="id" id="productId">
+                            <input type="hidden" name="id" id="entryId">
+                            <!-- Foreing keys -->
                             <div class="form-group">
-                                <label for="productName">
-                                    Nombre
+                                <label for="unitPackageSelect">
+                                    Unidad en presentación
                                 </label>
-                                <input type="text" class="form-control" id="productName" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productDescription">
-                                    Descripción
-                                </label>
-                                <input type="text" class="form-control" id="productDescription" name="description">
-                            </div>
-                            <div class="form-group">
-                                <label for="productStock">
-                                    Stock
-                                </label>
-                                <input type="number" class="form-control" id="productStock" name="stock" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="categorySelect">
-                                    Categoria
-                                </label>
-                                <select name="category_id" id="{{ select_id }}" class="custom-select" required>
+                                <select name="unit_package_id" id="unitPackageSelect" class="custom-select" required>
                                     <option value="" disabled selected>
-                                        Seleccione una categoría
+                                        Seleccione la unidad en presentación
                                     </option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productSelect">
+                                    Producto
+                                </label>
+                                <select name="product_id" id="productSelect" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione el producto
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Packaging details -->
+                            <div class="form-group">
+                                <label for="unitQuantity">
+                                    Cantidad en presentación
+                                </label>
+                                <input type="number" class="form-control" id="unitQuantity" name="unit_quantity"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="packagingType">
+                                    Presentación
+                                </label>
+                                <select name="packaging_type_id" id="packagingType" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione la presentación
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="unit">
+                                    Unidad de la presentación
+                                </label>
+                                <select name="unit_id" id="unit" class="custom-select" required>
+                                    <option value="" disabled selected>
+                                        Seleccione la unidad de la presentación
+                                    </option>
+                                </select>
+                            </div>
+                            <!-- Entry details -->
+                            <div class="form-group">
+                                <label for="quantityPackages">
+                                    Cantidad de presentaciones
+                                </label>
+                                <input type="number" class="form-control" id="quantityPackages" name="quantity_packages"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="weightPackages">
+                                    Peso de unidad en presentación
+                                </label>
+                                <input type="number" class="form-control" id="weightPackages" name="weight_packages"
+                                    required step="0.01">
                             </div>
                         </div>
                         <div class="modal-footer justify-content-between">
@@ -215,7 +310,7 @@
                 <!-- /.modal-content -->
             </div>
             <!-- /.modal-dialog -->
-        </div> --}}
+        </div>
         <!-- /.modal -->
 
         <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
@@ -294,6 +389,7 @@
                                     @end
                                 </select>
                             </div>
+                            <!-- Entry details -->
                             <div class="form-group">
                                 <label for="quantityPackages">
                                     Cantidad de presentaciones

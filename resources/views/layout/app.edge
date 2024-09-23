@@ -221,17 +221,19 @@
                 })
             })
 
-            let success_toast = "{{ flashMessages.get('success-toast') }}"
-            let error_toast = "{{ flashMessages.get('error-toast') }}"
+            const has_success = "{{ session.has('success-toast') }}".toLowerCase() == 'true'
+            const has_error = "{{ session.has('error-toast') }}".toLowerCase() == 'true'
 
-            if (success_toast != "undefined") {
+            if (has_success) {
+                const success_toast = "{{ session.get('success-toast') }}"
                 Toast.fire({
                     icon: 'success',
                     title: success_toast,
                 })
             }
 
-            if (error_toast != "undefined") {
+            if (has_error) {
+                const error_toast = "{{ session.get('error-toast') }}"
                 Toast.fire({
                     icon: 'error',
                     title: error_toast,
