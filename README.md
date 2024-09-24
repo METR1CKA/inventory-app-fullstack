@@ -7,11 +7,3 @@
 ```txt
 v20.17.0
 ```
-
-### DOCKER
-
-1. Instalar Docker
-
-```bash
-docker compose up -d
-```

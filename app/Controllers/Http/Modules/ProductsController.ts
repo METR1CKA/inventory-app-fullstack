@@ -1,4 +1,8 @@
 import ProductValidator from 'App/Validators/Inventory/Product/ProductValidator'
+import {
+    getRandomNumberInRange,
+    getNumberWithZero,
+} from 'App/Services/Functions'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ValidatorException } from 'App/Exceptions/ValidatorException'
 import FormatDates from 'App/Services/FormatDates'
@@ -40,10 +44,47 @@ export default class ProductsController {
             'stock',
         ])
 
+        const category = await Category.query()
+            .where({ id: data.category_id })
+            .preload('subcategory')
+            .first()
+
+        if (!category) {
+            return response.notFound({
+                status: 'Error',
+                message: 'Categoría no encontrada',
+                data: null,
+            })
+        }
+
+        const category_code = getNumberWithZero({ number: category.id })
+        const subcategory_code = getNumberWithZero({
+            number: !category.main_category_id
+                ? category.subcategory[0].id
+                : category.main_category_id ?? 0,
+        })
+        const random_number = getRandomNumberInRange({
+            min: 1,
+            max: 100,
+            isDecimal: false,
+        })
+        const random_code = getNumberWithZero({ number: random_number })
+
         const trx = await Database.transaction()
 
         try {
-            await Product.create(data)
+            const product = await Product.create({
+                ...data,
+                sku: '-',
+            })
+
+            await trx.commit()
+
+            await product
+                .merge({
+                    sku: `${category_code}${subcategory_code}${product.id}${random_code}`,
+                })
+                .save()
 
             await trx.commit()
         } catch (error) {
@@ -97,10 +138,41 @@ export default class ProductsController {
             'stock',
         ])
 
+        const category = await Category.query()
+            .where({ id: data.category_id })
+            .preload('subcategory')
+            .first()
+
+        if (!category) {
+            return response.notFound({
+                status: 'Error',
+                message: 'Categoría no encontrada',
+                data: null,
+            })
+        }
+
+        const category_code = getNumberWithZero({ number: category.id })
+        const subcategory_code = getNumberWithZero({
+            number: !category.main_category_id
+                ? category.subcategory[0].id
+                : category.main_category_id ?? 0,
+        })
+        const random_number = getRandomNumberInRange({
+            min: 1,
+            max: 100,
+            isDecimal: false,
+        })
+        const random_code = getNumberWithZero({ number: random_number })
+
         const trx = await Database.transaction()
 
         try {
-            await product.merge(data).save()
+            await product
+                .merge({
+                    ...data,
+                    sku: `${category_code}${subcategory_code}${product.id}${random_code}`,
+                })
+                .save()
 
             await trx.commit()
         } catch (error) {

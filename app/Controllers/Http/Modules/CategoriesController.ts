@@ -5,14 +5,23 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Category from 'App/Models/Category'
 
 export default class CategoriesController {
-    private categories = Category.query().orderBy('id', 'desc')
+    private categories = Category.query()
+        .preload('subcategory')
+        .orderBy('id', 'desc')
 
     public async index({ session, view }: HttpContextContract) {
         const categories = await this.categories
 
+        const main_categories = await this.categories.whereNull(
+            'main_category_id',
+        )
+
         session.put('success-toast', 'Categorias obtenidas con éxito')
 
-        return await view.render('inventory/category', { categories })
+        return await view.render('inventory/category', {
+            categories,
+            main_categories,
+        })
     }
 
     public async store({ session, request, response }: HttpContextContract) {
@@ -23,7 +32,7 @@ export default class CategoriesController {
             return response.status(code).json(json)
         }
 
-        const data = request.only(['name'])
+        const data = request.only(['name', 'main_category_id'])
 
         const trx = await Database.transaction()
 
@@ -75,7 +84,7 @@ export default class CategoriesController {
             })
         }
 
-        const data = request.only(['name'])
+        const data = request.only(['name', 'main_category_id'])
 
         const trx = await Database.transaction()
 

@@ -16,15 +16,37 @@ export function getRandomNumberInRange({
         : Math.floor(randomValue)
 }
 
+export function getNumberWithZero({ number }: { number: number }): string {
+    return number < 10 ? `0${number}` : `${number}`
+}
+
+function toStr(value: string) {
+    const val = value.trim()
+    return val.length == 0 ? '-' : val
+}
+
+function toNum(value: string) {
+    const val = value.trim()
+    if (val.length == 0) return 0
+    if (val.includes('.')) return parseFloat(val)
+    return parseInt(val)
+}
+
 export function getDataFromCsv(
     {
-        folder,
+        folder = 'csv',
         filename,
+        separator = ',',
     }: {
         folder: 'csv'
         filename: string
+        separator: ',' | ';'
     },
-    mapper?: (data: string[][], toStr: (value: string) => string) => any[],
+    mapper?: (
+        data: string[][],
+        toStr: (value: string) => string,
+        toNum: (value: string) => number,
+    ) => any[],
 ) {
     const fullpath = Application.resourcesPath(folder, filename)
 
@@ -33,12 +55,9 @@ export function getDataFromCsv(
         .trim()
         .split('\n')
         .slice(1)
-        .map((element) => element.trim().split(','))
+        .map((element) => element.trim().split(separator))
 
     if (!mapper) return data
 
-    const toStr = (value: string) =>
-        value.trim().length == 0 ? '-' : value.trim()
-
-    return mapper(data, toStr)
+    return mapper(data, toStr, toNum)
 }

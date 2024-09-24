@@ -1,4 +1,7 @@
-import { getRandomNumberInRange } from 'App/Services/Functions'
+import {
+    getRandomNumberInRange,
+    getNumberWithZero,
+} from 'App/Services/Functions'
 import PackagingDetail from 'App/Models/PackagingDetail'
 import PackagingType from 'App/Models/PackagingType'
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
@@ -23,24 +26,45 @@ export default class extends BaseSeeder {
             { name: 'GR' },
         ])
 
-        const [especias] = await Category.createMany([
-            { name: 'Especias' },
-            { name: 'Aceites' },
-            { name: 'Carnes' },
-            { name: 'Pescados' },
-            { name: 'Frutas' },
-            { name: 'Verduras' },
-            { name: 'Lácteos' },
-            { name: 'Cereales' },
-            { name: 'Legumbres' },
-            { name: 'Frutos secos' },
+        const [
+            bebidas,
+            alimentos,
+            lacteos,
+            snacks,
+            conservas,
+            limpieza,
+            cuidad_personal,
+            hogar,
+        ] = await Category.createMany([
             { name: 'Bebidas' },
-            { name: 'Conservas' },
-            { name: 'Dulces' },
+            { name: 'Alimentos' },
+            { name: 'Lácteos' },
             { name: 'Snacks' },
-            { name: 'Congelados' },
-            { name: 'Otros' },
+            { name: 'Conservas' },
+            { name: 'Limpieza' },
+            { name: 'Cuidado personal' },
+            { name: 'Hogar' },
         ])
+
+        const [, especias] = await Category.createMany([
+            { name: 'Refrescos', main_category_id: bebidas.id },
+            { name: 'Especias', main_category_id: alimentos.id },
+            { name: 'Yogur', main_category_id: lacteos.id },
+            { name: 'Galletas', main_category_id: snacks.id },
+            { name: 'Atún', main_category_id: conservas.id },
+            { name: 'Detergente', main_category_id: limpieza.id },
+            { name: 'Shampoo', main_category_id: cuidad_personal.id },
+            { name: 'Platos', main_category_id: hogar.id },
+        ])
+
+        const category_code = getNumberWithZero({ number: especias.id })
+        const subcategory_code = getNumberWithZero({ number: alimentos.id })
+        const random = getRandomNumberInRange({
+            min: 1,
+            max: 100,
+            isDecimal: false,
+        })
+        const random_code = getNumberWithZero({ number: random })
 
         const products = await Product.createMany([
             {
@@ -48,78 +72,91 @@ export default class extends BaseSeeder {
                 category_id: especias.id,
                 description: 'Pimienta negra en grano',
                 stock: 100,
+                sku: `${category_code}${subcategory_code}01${random_code}`,
             },
             {
-                name: 'Aceite de oliva',
+                name: 'Canela',
                 category_id: especias.id,
                 description: 'Aceite de oliva virgen extra',
                 stock: 50,
+                sku: `${category_code}${subcategory_code}02${random_code}`,
             },
             {
-                name: 'Solomillo de cerdo',
+                name: 'Oregano',
                 category_id: especias.id,
-                description: 'Solomillo de cerdo ibérico',
+                description: 'Oregano seco',
                 stock: 20,
+                sku: `${category_code}${subcategory_code}03${random_code}`,
             },
             {
-                name: 'Salmón',
+                name: 'Tomillo',
                 category_id: especias.id,
-                description: 'Salmón fresco',
+                description: 'Tomillo seco',
                 stock: 30,
+                sku: `${category_code}${subcategory_code}04${random_code}`,
             },
             {
-                name: 'Manzanas',
+                name: 'Clavo',
                 category_id: especias.id,
-                description: 'Manzanas rojas',
+                description: 'Clavo en polvo',
                 stock: 40,
+                sku: `${category_code}${subcategory_code}05${random_code}`,
             },
             {
-                name: 'Lechuga',
+                name: 'Cassia',
                 category_id: especias.id,
-                description: 'Lechuga iceberg',
+                description: 'Cassia en polvo',
                 stock: 10,
+                sku: `${category_code}${subcategory_code}06${random_code}`,
             },
             {
-                name: 'Leche',
+                name: 'Comino',
                 category_id: especias.id,
-                description: 'Leche entera',
+                description: 'Comino en polvo',
                 stock: 60,
+                sku: `${category_code}${subcategory_code}07${random_code}`,
             },
             {
-                name: 'Arroz',
+                name: 'Sal',
                 category_id: especias.id,
-                description: 'Arroz basmati',
+                description: 'Sal marina',
                 stock: 80,
+                sku: `${category_code}${subcategory_code}08${random_code}`,
             },
             {
-                name: 'Lentejas',
+                name: 'Curcuma',
                 category_id: especias.id,
-                description: 'Lentejas pardinas',
+                description: 'Curcuma en polvo',
                 stock: 70,
+                sku: `${category_code}${subcategory_code}09${random_code}`,
             },
             {
-                name: 'Almendras',
+                name: 'Curry',
                 category_id: especias.id,
-                description: 'Almendras crudas',
+                description: 'Curry en polvo',
                 stock: 90,
+                sku: `${category_code}${subcategory_code}10${random_code}`,
             },
             {
-                name: 'Vino tinto',
+                name: 'Eneldo',
                 category_id: especias.id,
-                description: 'Vino tinto crianza',
+                description: 'Eneldo semillas',
                 stock: 120,
+                sku: `${category_code}${subcategory_code}11${random_code}`,
             },
             {
-                name: 'Tomate frito',
+                name: 'Laurel',
                 category_id: especias.id,
-                description: 'Tomate frito casero',
+                description: 'Hoja de laurel',
                 stock: 110,
+                sku: `${category_code}${subcategory_code}12${random_code}`,
             },
             {
-                name: 'Galletas',
+                name: 'Nuez',
                 category_id: especias.id,
-                description: 'Galletas de chocolate',
+                description: 'Nuez moscada',
                 stock: 140,
+                sku: `${category_code}${subcategory_code}13${random_code}`,
             },
         ])
 

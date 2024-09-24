@@ -1,4 +1,4 @@
-// import { getDataFromCsv } from 'App/Services/Functions'
+// import { getDataFromCsv, getRandomNumberInRange } from 'App/Services/Functions'
 // import PackagingDetail from 'App/Models/PackagingDetail'
 // import PackagingType from 'App/Models/PackagingType'
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
@@ -10,68 +10,81 @@ import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 export default class extends BaseSeeder {
     public async run() {
         // Write your database queries inside the run method
-        // const usos_cfdis = fn.getDataFromCsv(
-        //     {
-        //         folder: 'CatalogosSAT',
-        //         filename: 'UsoCfdi.csv',
-        //     },
-        //     (data, toStr) => {
-        //         return data.map(([uso_cfdi, descripcion]: any) => {
-        //             return {
-        //                 uso_cfdi: toStr(uso_cfdi),
-        //                 descripcion: toStr(descripcion),
-        //                 active: true,
-        //             }
-        //         })
-        //     },
-        // )
-        // const elements = getDataFromCsv(
+        // const entries = getDataFromCsv(
         //     {
         //         folder: 'csv',
         //         filename: 'INVENTARIO_CHARLY.csv',
+        //         separator: ',',
         //     },
-        //     (data, toStr) => {
+        //     (data, toStr, toNum) => {
         //         return data.map(
         //             ([
-        //                 categoria,
-        //                 nombre,
-        //                 presentacion,
-        //                 cantidad,
-        //                 unidad,
-        //                 caja_bolsa_etc,
-        //                 cantidad_en_paquete,
-        //                 unidad_de_paquete,
-        //                 cantidad_de_paquetes_por_caja,
-        //                 cantida_de_paquetes_total,
-        //                 cantidad_total_final_del_producto,
-        //             ]: any) => {
-        //                 return {
-        //                     categoria: toStr(categoria),
-        //                     nombre: toStr(nombre),
-        //                     presentacion: toStr(presentacion),
-        //                     cantidad: toStr(cantidad),
-        //                     unidad: toStr(unidad),
-        //                     caja_bolsa_etc: toStr(caja_bolsa_etc),
-        //                     cantidad_en_paquete: toStr(cantidad_en_paquete),
-        //                     unidad_de_paquete: toStr(unidad_de_paquete),
-        //                     cantidad_de_paquetes_por_caja: toStr(
-        //                         cantidad_de_paquetes_por_caja,
-        //                     ),
-        //                     cantida_de_paquetes_total: toStr(
-        //                         cantida_de_paquetes_total,
-        //                     ),
-        //                     cantidad_total_final_del_producto: toStr(
-        //                         cantidad_total_final_del_producto,
-        //                     ),
-        //                 }
-        //             },
+        //                 category_name,
+        //                 product_name,
+        //                 packaging_type,
+        //                 unit_quantity,
+        //                 unit_name,
+        //                 quantity_packages,
+        //                 weight_packages,
+        //                 unit_package,
+        //                 quantity_weight,
+        //                 packages_total,
+        //                 product_total,
+        //             ]) => ({
+        //                 category_name: toStr(category_name),
+        //                 product_name: toStr(product_name),
+        //                 packaging_type: toStr(packaging_type),
+        //                 unit_quantity: toNum(unit_quantity),
+        //                 unit_name: toStr(unit_name),
+        //                 quantity_packages: toNum(quantity_packages),
+        //                 weight_packages: toNum(weight_packages),
+        //                 unit_package: toStr(unit_package),
+        //                 quantity_weight: toNum(quantity_weight),
+        //                 packages_total: toNum(packages_total),
+        //                 product_total: toNum(product_total),
+        //             }),
         //         )
         //     },
         // )
-        // const [caja] = await PackagingType.createMany([
-        //     { name: 'Caja' },
-        //     { name: 'Bolsa' },
-        //     { name: 'CajaH' },
-        // ])
+        // for (let {
+        //     category_name,
+        //     product_name,
+        //     packaging_type,
+        //     unit_quantity,
+        //     unit_name,
+        //     quantity_packages,
+        //     weight_packages,
+        //     unit_package,
+        //     quantity_weight,
+        //     packages_total,
+        //     product_total,
+        // } of entries) {
+        //     const category = await Category.firstOrCreate({
+        //         name: category_name,
+        //     })
+        //     const packagingType = await PackagingType.firstOrCreate({
+        //         name: packaging_type,
+        //     })
+        //     const unit = await Unit.firstOrCreate({
+        //         name: unit_name,
+        //     })
+        //     const product = await Product.firstOrCreate({
+        //         name: product_name,
+        //         category_id: category.id,
+        //         description: 'N/A',
+        //         stock: getRandomNumberInRange({
+        //             min: 10,
+        //             max: 500,
+        //             isDecimal: false,
+        //         }),
+        //     })
+        //     const packagingDetail = await PackagingDetail.create({
+        //         packaging_type_id: packagingType.id,
+        //         unit_id: unit.id,
+        //         unit_quantity,
+        //     })
+        //     await Entry.create({})
+        // }
+        // console.log(entries)
     }
 }

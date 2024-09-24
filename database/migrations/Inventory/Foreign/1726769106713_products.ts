@@ -15,6 +15,7 @@ export default class extends BaseSchema {
             table.string('name', 200).notNullable()
             table.text('description', 'longtext').nullable()
             table.integer('stock').notNullable()
+            table.string('sku', 100).notNullable()
             table.boolean('active').defaultTo(true).notNullable()
             /**
              * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

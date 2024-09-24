@@ -9,6 +9,9 @@ export default class CategoryValidator {
             rules.required(),
             rules.maxLength(200),
         ]),
+        main_category_id: schema.number.nullableAndOptional([
+            rules.exists({ table: 'categories', column: 'id' }),
+        ]),
     })
 
     public messages: CustomMessages = {

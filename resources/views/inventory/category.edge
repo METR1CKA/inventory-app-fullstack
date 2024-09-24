@@ -47,6 +47,9 @@
                                         <th class="text-center align-middle">
                                             NOMBRE
                                         </th>
+                                        <th class="text-center align-middle">
+                                            SUB CATEGORIA
+                                        </th>
                                         <th class="text-center align-middle no-sort">
                                             ACTIVO
                                         </th>
@@ -63,6 +66,9 @@
                                         </td>
                                         <td class="text-center align-middle">
                                             {{ category.name }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ category.subcategory.length ? category.subcategory[0].name : 'N/A' }}
                                         </td>
                                         <td class="text-center align-middle">
                                             <form id="deleteCategoryForm"
@@ -85,7 +91,19 @@
                                                             name: {
                                                                 element: 'categoryName',
                                                                 value: '{{ category.name }}'
-                                                            }
+                                                            },
+                                                            main_category_id: {
+                                                                element: 'categorySelect',
+                                                                value: '{{ category.main_category_id }}',
+                                                                values: [
+                                                                    @each(main_category in main_categories)
+                                                                    {
+                                                                        id: {{ main_category.id }},
+                                                                        name: '{{ main_category.name }}'
+                                                                    },
+                                                                    @end
+                                                                ]
+                                                            },
                                                         })">
                                                 <i class="fas fa-edit"></i>
                                             </button>
@@ -126,6 +144,16 @@
                                 </label>
                                 <input type="text" class="form-control" id="categoryName" name="name" required>
                             </div>
+                            <div class="form-group">
+                                <label for="categorySelect">
+                                    Categoria principal
+                                </label>
+                                <select name="main_category_id" id="categorySelect" class="custom-select" required>
+                                    <option value="" disabled>
+                                        Seleccione una categoría
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="submit" class="btn btn-primary col-12">
@@ -160,6 +188,19 @@
                                     Nombre
                                 </label>
                                 <input type="text" class="form-control" id="categoryName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="categorySelect">
+                                    Categoria
+                                </label>
+                                <select name="main_category_id" id="categorySelect" class="custom-select">
+                                    <option value="" disabled selected>
+                                        Seleccione una categoría principal
+                                    </option>
+                                    @each(main_category in main_categories)
+                                    <option value="{{ main_category.id }}">{{ main_category.name }}</option>
+                                    @end
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer justify-content-between">

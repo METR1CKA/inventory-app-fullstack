@@ -7,6 +7,11 @@ export default class Category extends BaseModel {
     })
     public id: number
 
+    @column({
+        // serializeAs: null,
+    })
+    public main_category_id?: number | null
+
     @column()
     public name: string
 
@@ -14,6 +19,12 @@ export default class Category extends BaseModel {
     public active: boolean
 
     // Relaciones
+    @hasMany(() => Category, {
+        localKey: 'id',
+        foreignKey: 'main_category_id',
+    })
+    public subcategory: HasMany<typeof Category>
+
     @hasMany(() => Product, {
         localKey: 'id',
         foreignKey: 'category_id',

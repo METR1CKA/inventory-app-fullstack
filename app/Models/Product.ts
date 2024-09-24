@@ -32,6 +32,9 @@ export default class Product extends BaseModel {
     public stock: number
 
     @column()
+    public sku: string
+
+    @column()
     public active: boolean
 
     @column.dateTime({
