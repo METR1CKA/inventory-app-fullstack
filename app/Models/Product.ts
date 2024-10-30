@@ -1,14 +1,6 @@
-import {
-    BaseModel,
-    belongsTo,
-    BelongsTo,
-    column,
-    HasMany,
-    hasMany,
-} from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import Category from './Category'
 import { DateTime } from 'luxon'
-import Entry from './Entry'
 import FormatDates from 'App/Services/FormatDates'
 
 export default class Product extends BaseModel {
@@ -56,10 +48,4 @@ export default class Product extends BaseModel {
         foreignKey: 'category_id',
     })
     public category: BelongsTo<typeof Category>
-
-    @hasMany(() => Entry, {
-        localKey: 'id',
-        foreignKey: 'product_id',
-    })
-    public entries: HasMany<typeof Entry>
 }
