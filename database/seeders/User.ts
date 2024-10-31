@@ -1,6 +1,7 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Env from '@ioc:Adonis/Core/Env'
 import User from 'App/Models/User'
+import { UserFactory } from 'Database/factories'
 
 export default class extends BaseSeeder {
     public async run() {
@@ -11,5 +12,7 @@ export default class extends BaseSeeder {
             username: Env.get('USERNAME', 'user'),
             active: true,
         })
+
+        await UserFactory.createMany(50)
     }
 }

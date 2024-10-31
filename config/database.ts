@@ -55,8 +55,7 @@ const databaseConfig: DatabaseConfig = {
             seeders: {
                 paths: [
                     // Seeders
-                    './database/seeders/User',
-                    './database/seeders/Inventory',
+                    './database/seeders',
                 ],
             },
             healthCheck: true,

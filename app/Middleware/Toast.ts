@@ -10,9 +10,7 @@ export default class Toast {
         const keys_array = ['success-toast', 'error-toast']
 
         for (const key of keys_array) {
-            if (session.has(key)) {
-                session.forget(key)
-            }
+            if (session.has(key)) session.forget(key)
         }
 
         await next()

@@ -5,9 +5,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Category from 'App/Models/Category'
 
 export default class CategoriesController {
-    private categories = Category.query()
-        .preload('subcategory')
-        .orderBy('id', 'desc')
+    private categories = Category.query().orderBy('id', 'desc')
 
     public async index({ session, view }: HttpContextContract) {
         const categories = await this.categories

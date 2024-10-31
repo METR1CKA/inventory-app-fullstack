@@ -46,7 +46,6 @@ export default class ProductsController {
 
         const category = await Category.query()
             .where({ id: data.category_id })
-            .preload('subcategory')
             .first()
 
         if (!category) {
@@ -58,11 +57,7 @@ export default class ProductsController {
         }
 
         const category_code = getNumberWithZero({ number: category.id })
-        const subcategory_code = getNumberWithZero({
-            number: !category.main_category_id
-                ? category.subcategory[0].id
-                : category.main_category_id ?? 0,
-        })
+
         const random_number = getRandomNumberInRange({
             min: 1,
             max: 100,
@@ -82,7 +77,7 @@ export default class ProductsController {
 
             await product
                 .merge({
-                    sku: `${category_code}${subcategory_code}${product.id}${random_code}`,
+                    sku: `${category_code}${product.id}${random_code}`,
                 })
                 .save()
 
@@ -140,7 +135,6 @@ export default class ProductsController {
 
         const category = await Category.query()
             .where({ id: data.category_id })
-            .preload('subcategory')
             .first()
 
         if (!category) {
@@ -152,11 +146,6 @@ export default class ProductsController {
         }
 
         const category_code = getNumberWithZero({ number: category.id })
-        const subcategory_code = getNumberWithZero({
-            number: !category.main_category_id
-                ? category.subcategory[0].id
-                : category.main_category_id ?? 0,
-        })
         const random_number = getRandomNumberInRange({
             min: 1,
             max: 100,
@@ -170,7 +159,7 @@ export default class ProductsController {
             await product
                 .merge({
                     ...data,
-                    sku: `${category_code}${subcategory_code}${product.id}${random_code}`,
+                    sku: `${category_code}${product.id}${random_code}`,
                 })
                 .save()
 
