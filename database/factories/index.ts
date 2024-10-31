@@ -25,8 +25,8 @@ export const ProductFactory = Factory.define(Product, ({ faker }) => {
     return {
         name: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
-        stock: faker.number.int({ min: 1, max: 100 }),
-        sku: faker.string.numeric({ length: { min: 5, max: 10 } }),
+        stock: faker.number.int({ min: 0, max: 10000 }),
+        sku: faker.string.numeric({ length: { min: 10, max: 10 } }),
         active: true,
     }
 }).build()
