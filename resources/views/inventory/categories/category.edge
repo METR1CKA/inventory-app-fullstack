@@ -4,12 +4,6 @@
 
 @set('table_id', 'datatable-categories')
 
-@set('edit_modal', 'editModalCategory')
-
-@set('create_modal', 'createModalCategory')
-
-@set('url', route('categories.index'))
-
 @section('body')
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -21,11 +15,10 @@
                     <h1>{{ title }}</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <!-- Botón para crear nueva categoría -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{ create_modal }}">
+                    <a href="{{ route('categories.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
-                        Agregar Categoría
-                    </button>
+                        Crear Categoría
+                    </a>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -48,13 +41,13 @@
                                             NOMBRE
                                         </th>
                                         <th class="text-center align-middle">
-                                            SUB CATEGORIA
+                                            DESCRIPCIÓN
                                         </th>
                                         <th class="text-center align-middle no-sort">
-                                            ACTIVO
+                                            EDICIÓN
                                         </th>
                                         <th class="text-center align-middle no-sort">
-                                            EDITAR
+                                            ESTADO
                                         </th>
                                     </tr>
                                 </thead>
@@ -68,10 +61,16 @@
                                             {{ category.name }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ category.subcategory.length ? category.subcategory[0].name : 'N/A' }}
+                                            {{ category.description ?? 'N/A' }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            <form id="deleteCategoryForm"
+                                            <a href="{{ route('categories.edit', { id: category.id }) }}"
+                                                class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <form
                                                 action="{{ route('categories.destroy', { id: category.id }, { qs: { _method: 'DELETE' }}) }}"
                                                 method="post">
                                                 {{ csrfField() }}
@@ -79,34 +78,6 @@
                                                     <i class="fas fa-toggle-{{ category.active ? 'on' : 'off' }}"></i>
                                                 </button>
                                             </form>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <button class="btn btn-outline-primary" type="button" data-toggle="modal"
-                                                data-target="#{{ edit_modal }}" onclick="openEditModal({
-                                                            modal_id: '{{ edit_modal }}',
-                                                            id: {
-                                                                element: 'categoryId',
-                                                                value: '{{ category.id }}'
-                                                            },
-                                                            name: {
-                                                                element: 'categoryName',
-                                                                value: '{{ category.name }}'
-                                                            },
-                                                            main_category_id: {
-                                                                element: 'categorySelect',
-                                                                value: '{{ category.main_category_id }}',
-                                                                values: [
-                                                                    @each(main_category in main_categories)
-                                                                    {
-                                                                        id: {{ main_category.id }},
-                                                                        name: '{{ main_category.name }}'
-                                                                    },
-                                                                    @end
-                                                                ]
-                                                            },
-                                                        })">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
                                         </td>
                                     </tr>
                                     @end
@@ -122,97 +93,6 @@
             <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
-
-        <div class="modal fade" id="{{ edit_modal }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="editModalLabel">
-                            Editar categoria
-                        </h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form id="editCategoryForm">
-                        {{ csrfField() }}
-                        <div class="modal-body">
-                            <input type="hidden" name="id" id="categoryId">
-                            <div class="form-group">
-                                <label for="categoryName">
-                                    Nombre
-                                </label>
-                                <input type="text" class="form-control" id="categoryName" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="categorySelect">
-                                    Categoria principal
-                                </label>
-                                <select name="main_category_id" id="categorySelect" class="custom-select" required>
-                                    <option value="" disabled>
-                                        Seleccione una categoría
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="submit" class="btn btn-primary col-12">
-                                Guardar cambios
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
-        <div class="modal fade" id="{{ create_modal }}" tabindex="-1" aria-labelledby="createModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="createModalLabel">
-                            Crear categoria
-                        </h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form id="createCategoryForm">
-                        {{ csrfField() }}
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="categoryName">
-                                    Nombre
-                                </label>
-                                <input type="text" class="form-control" id="categoryName" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="categorySelect">
-                                    Categoria
-                                </label>
-                                <select name="main_category_id" id="categorySelect" class="custom-select">
-                                    <option value="" disabled selected>
-                                        Seleccione una categoría principal
-                                    </option>
-                                    @each(main_category in main_categories)
-                                    <option value="{{ main_category.id }}">{{ main_category.name }}</option>
-                                    @end
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="submit" class="btn btn-primary col-12">
-                                Guardar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- /.modal -->
     </section>
     <!-- /.content -->
 </div>

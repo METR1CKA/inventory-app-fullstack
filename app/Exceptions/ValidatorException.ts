@@ -1,30 +1,19 @@
 import Env from '@ioc:Adonis/Core/Env'
 
 export function ValidatorException(error: any) {
-    const BAD_REQUEST = 400
-    const NOT_FOUND = 404
-    const RULE_EXIST = 'exists'
+    const { messages } = error
 
-    // Destructuring
-    const {
-        messages: {
-            errors: [{ message, field, rule }],
-        },
-    } = error
+    let errors: any[] = []
+
+    for (let _error in messages) {
+        errors.push(...messages[_error])
+    }
+
+    errors = [...new Set(errors)]
 
     if (Env.get('NODE_ENV') == 'development') {
-        console.log('Err', error.messages)
+        console.error('Errors: ', errors)
     }
 
-    return {
-        code: rule.includes(RULE_EXIST) ? NOT_FOUND : BAD_REQUEST,
-        json: {
-            status: 'Error',
-            message,
-            data: {
-                field,
-                rule,
-            },
-        },
-    }
+    return errors
 }

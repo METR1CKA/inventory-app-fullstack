@@ -7,6 +7,4 @@ Route.group(() => {
     }).middleware('guest')
 
     Route.post('logout', 'AuthUsersController.logout').middleware('auth:web')
-})
-    .middleware('toast')
-    .namespace('App/Controllers/Http/Auth')
+}).namespace('App/Controllers/Http/Auth')

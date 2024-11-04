@@ -61,3 +61,6 @@ export function getDataFromCsv(
 
     return mapper(data, toStr, toNum)
 }
+
+export const success_toast = 'success-toast'
+export const error_toast = 'error-toast'

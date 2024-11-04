@@ -41,6 +41,7 @@ export default class AuthUsersController {
         await auth.use('web').logout()
 
         session.clear()
+        session.regenerate()
 
         return response.redirect().toRoute('login')
     }

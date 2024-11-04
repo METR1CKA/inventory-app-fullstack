@@ -10,15 +10,15 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
     <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <!-- DataTables -->
-    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -46,38 +46,48 @@
     <!-- REQUIRED SCRIPTS -->
 
     <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.min.js"></script>
+    <script src="/dist/js/adminlte.min.js"></script>
 
     <!-- OPTIONAL SCRIPTS -->
-    <script src="plugins/chart.js/Chart.min.js"></script>
+    <script src="/plugins/chart.js/Chart.min.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="dist/js/pages/dashboard3.js"></script>
+    <script src="/dist/js/pages/dashboard3.js"></script>
 
     <!-- SweetAlert2 -->
-    <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
 
     <!-- DataTables  & Plugins -->
-    <script src="plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="plugins/jszip/jszip.min.js"></script>
-    <script src="plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-    <script src="dist/js/forms.js"></script>
-    <script>
-        $(function () {
-            $('#{{ table_id }}')
-                .DataTable({
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="/plugins/jszip/jszip.min.js"></script>
+    <script src="/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script type="text/javascript">
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+        })
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const tableId = '{{ table_id }}'
+            const tableElement = document.querySelector(`#${tableId}`)
+
+            if (tableElement) {
+                // Inicialización de DataTable
+                const dataTable = new DataTable(tableElement, {
                     responsive: true,
                     paging: true,
                     lengthChange: false,
@@ -89,155 +99,42 @@
                     buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
                     columnDefs: [{ orderable: false, targets: 'no-sort' }],
                 })
-                .buttons()
-                .container()
-                .appendTo('#{{ table_id }}_wrapper .col-md-6:eq(0)')
-        })
 
-        $(document).ready(function () {
-            $('#{{ create_modal }}').submit(function (event) {
-                event.preventDefault()
+                // Mostrar botones
+                dataTable
+                    .buttons()
+                    .container()
+                    .appendTo(`#${tableId}_wrapper .col-md-6:eq(0)`)
+            }
 
-                let form = $(event.target)
+            // Manejo de Toasts en session
+            let key = null
 
-                let formData = {}
+            const success = "{{ session.has('success-toast') ? session.get('success-toast') : null }}"
+            const error = "{{ session.has('error-toast') ? session.get('error-toast') : null }}"
 
-                form.find('input, select, textarea').each(function () {
-                    let input = $(this)
-                    let name = input.attr('name')
-                    let value = input.val()
-                    if (name) formData[name] = value
-                })
+            if (success !== 'null') {
+                key = 'success-toast'
 
-                showOverlay('{{ create_modal }}')
-
-                $.ajax({
-                    url: '{{ url }}',
-                    method: 'POST',
-                    data: JSON.stringify(formData),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrfToken }}'
-                    },
-                    success: function (response) {
-                        setTimeout(() => {
-                            hideOverlay(modal_id)
-                        }, 750)
-
-                        setTimeout(() => {
-                            if (response.status != 'Error') {
-                                $('#{{ create_modal }}').modal('hide')
-                                location.reload()
-                            }
-
-                            if (response.status == 'Error') {
-                                Toast.fire({
-                                    icon: 'error',
-                                    title: response.message,
-                                })
-                            }
-                        }, 750)
-                    },
-                    error: function (xhr, status, error) {
-                        setTimeout(() => {
-                            hideOverlay(modal_id)
-                        }, 750)
-
-                        setTimeout(() => {
-                            console.error('response: ', xhr.responseJSON)
-                            console.error('error: ', error)
-                            console.error('status: ', status)
-
-                            Toast.fire({
-                                icon: 'error',
-                                title: xhr.responseJSON.message,
-                            })
-                        }, 750)
-                    }
-                })
-            })
-
-            $('#{{ edit_modal }}').submit(function (event) {
-                event.preventDefault()
-
-                let form = $(event.target)
-
-                let id = form.find('input[name="id"]').val()
-
-                let formData = {}
-
-                form.find('input, select, textarea').each(function () {
-                    let input = $(this)
-                    let name = input.attr('name')
-                    let value = input.val()
-                    if (name && name != 'id') formData[name] = value
-                })
-
-                showOverlay('{{ edit_modal }}')
-
-                $.ajax({
-                    url: `{{ url }}/${id}`,
-                    method: 'PUT',
-                    data: JSON.stringify(formData),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrfToken }}'
-                    },
-                    success: function (response) {
-                        setTimeout(() => {
-                            hideOverlay(modal_id)
-                        }, 750)
-
-                        setTimeout(() => {
-                            if (response.status != 'Error') {
-                                $('#{{ edit_modal }}').modal('hide')
-                                location.reload()
-                            }
-
-                            if (response.status == 'Error') {
-                                Toast.fire({
-                                    icon: 'error',
-                                    title: response.message,
-                                })
-                            }
-                        }, 750)
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('response: ', xhr.responseJSON)
-                        console.error('error: ', error)
-                        console.error('status: ', status)
-
-                        setTimeout(() => {
-                            hideOverlay(modal_id)
-                        }, 950)
-
-                        setTimeout(() => {
-                            Toast.fire({
-                                icon: 'error',
-                                title: xhr.responseJSON.message,
-                            })
-                        }, 950)
-                    }
-                })
-            })
-
-            const has_success = "{{ session.has('success-toast') }}".toLowerCase() == 'true'
-            const has_error = "{{ session.has('error-toast') }}".toLowerCase() == 'true'
-
-            if (has_success) {
-                const success_toast = "{{ session.get('success-toast') }}"
                 Toast.fire({
                     icon: 'success',
-                    title: success_toast,
+                    title: success,
                 })
             }
 
-            if (has_error) {
-                const error_toast = "{{ session.get('error-toast') }}"
+            if (error !== 'null') {
+                key = 'error-toast'
+
                 Toast.fire({
                     icon: 'error',
-                    title: error_toast,
+                    title: error,
                 })
+            }
+
+            if (key) {
+                setTimeout(() => {
+                    fetch(`/api/v1/forget-toast/${key}`, { method: 'POST' })
+                }, 1500)
             }
         })
     </script>

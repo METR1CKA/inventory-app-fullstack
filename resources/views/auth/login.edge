@@ -10,16 +10,16 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
 </head>
 <style>
     /* Imagen de fondo que cubre toda la página */
     body {
-        background: url('dist/img/almacen.png') no-repeat center center fixed;
+        background: url('/dist/img/almacen.png') no-repeat center center fixed;
         background-size: cover;
         position: relative;
         z-index: 1;
@@ -78,10 +78,10 @@
                                 <span class="fas fa-envelope"></span>
                             </div>
                         </div>
+                        <span class="text-red col-12">
+                            {{ flashMessages.get('errors.email[0]', '') }}
+                        </span>
                     </div>
-                    <span class="text-red">
-                        {{ flashMessages.get('errors.email[0]', '') }}
-                    </span>
                     <div class="input-group mb-3">
                         <input type="password" class="form-control" placeholder="Password" name="password"
                             value="{{ flashMessages.get('password', '') }}" required>
@@ -90,13 +90,11 @@
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
+                        <span class="text-red col-12">
+                            {{ flashMessages.get('errors.password[0]', '') }}
+                            {{ flashMessages.get('error', '') }}
+                        </span>
                     </div>
-                    <span class="text-red">
-                        {{ flashMessages.get('errors.password[0]', '') }}
-                    </span>
-                    <p class="text-red col-12">
-                        {{ flashMessages.get('error', '') }}
-                    </p>
                     <div class="row">
                         <!-- /.col -->
                         <div class="col-12">
@@ -115,11 +113,11 @@
     <!-- /.login-box -->
 
     <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="dist/js/adminlte.min.js"></script>
+    <script src="/dist/js/adminlte.min.js"></script>
 </body>
 
 </html>

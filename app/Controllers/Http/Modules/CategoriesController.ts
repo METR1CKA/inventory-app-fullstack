@@ -1,6 +1,7 @@
 import CategoryValidator from 'App/Validators/Inventory/Category/CategoryValidator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ValidatorException } from 'App/Exceptions/ValidatorException'
+import { success_toast, error_toast } from 'App/Services/Functions'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Category from 'App/Models/Category'
 
@@ -10,52 +11,64 @@ export default class CategoriesController {
     public async index({ session, view }: HttpContextContract) {
         const categories = await this.categories
 
-        const main_categories = await this.categories.whereNull(
-            'main_category_id',
-        )
+        session.put(success_toast, 'Categorias obtenidas con éxito')
 
-        session.put('success-toast', 'Categorias obtenidas con éxito')
-
-        return await view.render('inventory/category', {
+        return await view.render('inventory/categories/category', {
             categories,
-            main_categories,
         })
+    }
+
+    public async create({ view }: HttpContextContract) {
+        return await view.render('inventory/categories/category_create')
     }
 
     public async store({ session, request, response }: HttpContextContract) {
         try {
             await request.validate(CategoryValidator)
-        } catch (error) {
-            const { code, json } = ValidatorException(error)
-            return response.status(code).json(json)
-        }
+        } catch (errorValidation) {
+            const error = ValidatorException(errorValidation)
 
-        const data = request.only(['name', 'main_category_id'])
+            session.put(error_toast, 'Campos requeridos no completados')
+            session.flash('error-name', error[0])
+
+            return response.redirect().back()
+        }
 
         const trx = await Database.transaction()
 
+        const data = request.only(['name', 'description'])
+
         try {
             await Category.create(data)
-
             await trx.commit()
         } catch (error) {
             console.error(error)
-
             await trx.rollback()
 
-            return response.internalServerError({
-                status: 'Error',
-                message: 'Error al crear la categoría',
-                data: null,
-            })
+            session.put(error_toast, 'Error al crear la categoría')
+            session.flash('error', error)
+
+            return response.redirect().back()
         }
 
-        session.put('success-toast', 'Categoría creada')
+        return response.redirect().toRoute('categories.index')
+    }
 
-        return response.created({
-            status: 'Success',
-            message: 'Categoría creada',
-            data: null,
+    public async edit({
+        session,
+        params,
+        response,
+        view,
+    }: HttpContextContract) {
+        const category = await Category.find(params.id)
+
+        if (!category) {
+            session.put(error_toast, 'Categoría no encontrada')
+            return response.redirect().back()
+        }
+
+        return await view.render('inventory/categories/category_update', {
+            category,
         })
     }
 
@@ -67,48 +80,34 @@ export default class CategoriesController {
     }: HttpContextContract) {
         try {
             await request.validate(CategoryValidator)
-        } catch (error) {
-            const { code, json } = ValidatorException(error)
-            return response.status(code).json(json)
+        } catch (errorValidation) {
+            const error = ValidatorException(errorValidation)
+
+            session.put('error_toast', 'Campos requeridos no completados')
+            session.flash('error-name', error[0])
+
+            return response.redirect().back()
         }
 
-        const category = await Category.find(params.id)
-
-        if (!category) {
-            return response.notFound({
-                status: 'Error',
-                message: 'Categoría no encontrada',
-                data: null,
-            })
-        }
-
-        const data = request.only(['name', 'main_category_id'])
+        const category = await Category.findOrFail(params.id)
+        const data = request.only(['name', 'description'])
 
         const trx = await Database.transaction()
 
         try {
             await category.merge(data).save()
-
             await trx.commit()
         } catch (error) {
             console.error(error)
-
             await trx.rollback()
 
-            return response.internalServerError({
-                status: 'Error',
-                message: 'Error al actualizar la categoría',
-                data: null,
-            })
+            session.put(error_toast, 'Error al actualizar la categoría')
+            session.flash('error', error)
+
+            return response.redirect().back()
         }
 
-        session.put('success-toast', 'Categoría actualizada')
-
-        return response.ok({
-            status: 'Success',
-            message: 'Categoría actualizada',
-            data: null,
-        })
+        return response.redirect().toRoute('categories.index')
     }
 
     public async destroy({ session, params, response }: HttpContextContract) {
@@ -122,24 +121,18 @@ export default class CategoriesController {
 
         try {
             await category.merge({ active: !category.active }).save()
-
             await trx.commit()
         } catch (error) {
             console.error(error)
-
             await trx.rollback()
 
-            return response.internalServerError({
-                status: 'Error',
-                message: `Error al ${
-                    category.active ? 'desactivar' : 'activar'
-                } la categoría`,
-                data: null,
-            })
+            session.put(error_toast, 'Error al eliminar la categoría')
+
+            return response.redirect().back()
         }
 
         session.put(
-            'success-toast',
+            success_toast,
             `Categoría ${category.active ? 'activada' : 'desactivada'}`,
         )
 

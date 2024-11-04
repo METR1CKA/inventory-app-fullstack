@@ -6,7 +6,7 @@ Route.group(() => {
     Route.group(() => {
         Route.resource('categories', 'CategoriesController')
             .as('categories')
-            .only(['index', 'store', 'update', 'destroy'])
+            .except(['show'])
 
         Route.resource('products', 'ProductsController')
             .as('products')
@@ -16,4 +16,6 @@ Route.group(() => {
             .as('entries')
             .only(['index', 'store', 'update'])
     }).namespace('App/Controllers/Http/Modules')
-}).middleware(['toast', 'auth:web'])
+}).middleware('auth:web')
+
+Route.post('forget-toast/:key', 'ToastsController.forgetToast').prefix('api/v1')

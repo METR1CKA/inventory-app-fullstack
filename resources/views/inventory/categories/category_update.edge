@@ -1,0 +1,63 @@
+@layout('layout/app')
+
+@set('title', 'Editar Categoría')
+
+@section('body')
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ title }}</h1>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a href="{{ route('categories.index') }}" class="btn btn-secondary">
+                        Volver
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <form method="POST"
+                action="{{ route('categories.update', { id: category.id }, { qs: { _method: 'PUT' } }) }}">
+                {{ csrfField() }}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="name">Nombre <span class="text-red">*</span></label>
+                            <input type="text"
+                                class="form-control {{ flashMessages.has('error-name') ? 'is-invalid' : '' }}" id="name"
+                                name="name" value="{{ category.name }}"
+                                placeholder="Ingrese un nombre para la categoria">
+                            <span class="text-red">
+                                {{ flashMessages.has('error-name') ? flashMessages.get('error-name') : '' }}
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción</label>
+                            @if(category.description)
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                placeholder="Ingrese una descripción para la categoria">{{ category.description  }}</textarea>
+                            @else
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                placeholder="Ingrese una descripción para la categoria"></textarea>
+                            @end
+                        </div>
+
+                        <span class="text-red">
+                            {{ flashMessages.has('error') ? flashMessages.get('error') : '' }}
+                        </span>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Actualizar Categoría</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+@end
