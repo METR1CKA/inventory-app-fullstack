@@ -43,10 +43,10 @@
                                             DESCRIPCIÓN
                                         </th>
                                         <th class="text-center align-middle no-sort">
-                                            EDICIÓN
+                                            ESTADO
                                         </th>
                                         <th class="text-center align-middle no-sort">
-                                            ESTADO
+                                            EDICIÓN
                                         </th>
                                     </tr>
                                 </thead>
@@ -63,12 +63,6 @@
                                             {{ category.description ?? 'N/A' }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            <a href="{{ route('categories.edit', { id: category.id }) }}"
-                                                class="btn btn-outline-primary">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </td>
-                                        <td class="text-center align-middle">
                                             <form
                                                 action="{{ route('categories.destroy', { id: category.id }, { qs: { _method: 'DELETE' }}) }}"
                                                 method="post">
@@ -77,6 +71,12 @@
                                                     <i class="fas fa-toggle-{{ category.active ? 'on' : 'off' }}"></i>
                                                 </button>
                                             </form>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a href="{{ route('categories.edit', { id: category.id }) }}"
+                                                class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     @end

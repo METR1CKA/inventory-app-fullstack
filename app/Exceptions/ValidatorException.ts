@@ -3,15 +3,13 @@ import Env from '@ioc:Adonis/Core/Env'
 export function ValidatorException(error: any) {
     const { messages } = error
 
-    let errors: any[] = []
+    const errors: { [key: string]: string } = {}
 
-    for (let _error in messages) {
-        errors.push(...messages[_error])
+    for (const field in messages) {
+        if (messages[field].length > 0) errors[field] = messages[field][0]
     }
 
-    errors = [...new Set(errors)]
-
-    if (Env.get('NODE_ENV') == 'development') {
+    if (Env.get('NODE_ENV') === 'development') {
         console.error('Errors: ', errors)
     }
 

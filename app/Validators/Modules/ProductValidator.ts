@@ -5,16 +5,19 @@ export default class ProductValidator {
     constructor(protected ctx: HttpContextContract) {}
 
     public schema = schema.create({
-        name: schema.string({ trim: true }, [
-            rules.required(),
-            rules.maxLength(200),
-        ]),
-        description: schema.string.nullableAndOptional({ trim: true }),
         category_id: schema.number([
             rules.required(),
             rules.exists({ table: 'categories', column: 'id' }),
         ]),
+        name: schema.string({ trim: true }, [
+            rules.required(),
+            rules.maxLength(200),
+        ]),
         stock: schema.number([rules.required(), rules.unsigned()]),
+        description: schema.string.nullableAndOptional({ trim: true }),
+        sku: schema.string.nullableAndOptional({ trim: true }, [
+            rules.maxLength(50),
+        ]),
     })
 
     public messages: CustomMessages = {

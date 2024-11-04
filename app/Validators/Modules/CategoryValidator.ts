@@ -9,7 +9,7 @@ export default class CategoryValidator {
             rules.required(),
             rules.maxLength(200),
         ]),
-        description: schema.string.optional({ trim: true }),
+        description: schema.string.nullableAndOptional({ trim: true }),
     })
 
     public messages: CustomMessages = {

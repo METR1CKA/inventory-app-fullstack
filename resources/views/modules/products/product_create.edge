@@ -1,0 +1,143 @@
+@layout('layout/app')
+
+@set('title', 'Crear Producto')
+
+@section('body')
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ title }}</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <form method="POST" action="{{ route('products.store') }}">
+                {{ csrfField() }}
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-bold">
+                            <i class="fas fa-list"></i> Producto
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="name">Nombre <span class="text-red">*</span></label>
+                            <input type="text"
+                                class="form-control {{ flashMessages.has('error-name') ? 'is-invalid' : '' }}" id="name"
+                                name="name" placeholder="Ingrese un nombre para el producto">
+                            @if(flashMessages.has('error-name'))
+                            <span id="flash-message-name" class="text-red">
+                                {{ flashMessages.get('error-name') }}
+                            </span>
+                            @end
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Descripción</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                placeholder="Ingrese una descripción para el producto"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stock">Stock <span class="text-red">*</span></label>
+                            <input type="number"
+                                class="form-control {{ flashMessages.has('error-name') ? 'is-invalid' : '' }}"
+                                id="stock" name="stock" placeholder="Ingrese el stock del producto">
+                            @if(flashMessages.has('error-stock'))
+                            <span id="flash-message-stock" class="text-red">
+                                {{ flashMessages.get('error-stock') }}
+                            </span>
+                            @end
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sku">SKU</label>
+                            <input type="text" class="form-control" id="sku" name="sku"
+                                placeholder="Ingrese el sku del producto">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Categoria <span class="text-red">*</span></label>
+                            <select name="category_id" id="category_id" class="custom-select">
+                                <option value="" disabled selected>
+                                    Seleccione una categoría
+                                </option>
+                                @each(category in categories)
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                @end
+                            </select>
+                            @if(flashMessages.has('error-category_id'))
+                            <span id="flash-message-category_id" class="text-red">
+                                {{ flashMessages.get('error-category_id') }}
+                            </span>
+                            @end
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                        <a href="{{ route('categories.index') }}" class="btn btn-secondary">
+                            Volver
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const flashMessageName = document.getElementById('flash-message-name')
+        const nameInput = document.getElementById('name');
+
+        if (flashMessageName) {
+            nameInput.addEventListener('input', () => {
+                flashMessageName.style.transition = 'opacity 0.5s'
+                flashMessageName.style.opacity = '0'
+                nameInput.classList.remove('is-invalid')
+                setTimeout(() => flashMessageName.remove(), 500)
+            });
+        }
+
+        const flashMessageStock = document.getElementById('flash-message-stock')
+        const stockInput = document.getElementById('stock')
+
+        if (flashMessageStock) {
+            stockInput.addEventListener('input', () => {
+                flashMessageStock.style.transition = 'opacity 0.5s'
+                flashMessageStock.style.opacity = '0'
+                stockInput.classList.remove('is-invalid')
+                setTimeout(() => flashMessageStock.remove(), 500)
+            })
+        }
+
+        const flashMessageSku = document.getElementById('flash-message-sku')
+        const skuInput = document.getElementById('sku')
+
+        if (flashMessageSku) {
+            skuInput.addEventListener('input', () => {
+                flashMessageSku.style.transition = 'opacity 0.5s'
+                flashMessageSku.style.opacity = '0'
+                skuInput.classList.remove('is-invalid')
+                setTimeout(() => flashMessageSku.remove(), 500)
+            })
+        }
+
+        const flashMessageCategory = document.getElementById('flash-message-category_id')
+        const categoryInput = document.getElementById('category_id')
+
+        if (flashMessageCategory) {
+            categoryInput.addEventListener('input', () => {
+                flashMessageCategory.style.transition = 'opacity 0.5s'
+                flashMessageCategory.style.opacity = '0'
+                categoryInput.classList.remove('is-invalid')
+                setTimeout(() => flashMessageCategory.remove(), 500)
+            })
+        }
+    })
+</script>
+@end

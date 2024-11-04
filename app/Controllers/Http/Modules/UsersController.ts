@@ -24,12 +24,17 @@ export default class UsersController {
         try {
             await request.validate(UserValidator)
         } catch (errorValidation) {
-            const [error_email, error_username] =
-                ValidatorException(errorValidation)
+            const { email, username } = ValidatorException(errorValidation)
 
             session.put('error-toast', 'Campos requeridos no completados')
-            session.flash('error-email', error_email)
-            session.flash('error-username', error_username)
+
+            if (email) {
+                session.flash('error-email', email)
+            }
+
+            if (username) {
+                session.flash('error-username', username)
+            }
 
             return response.redirect().back()
         }
@@ -92,12 +97,17 @@ export default class UsersController {
         try {
             await request.validate(UserValidator)
         } catch (errorValidation) {
-            const [error_email, error_username] =
-                ValidatorException(errorValidation)
+            const { email, username } = ValidatorException(errorValidation)
 
             session.put('error-toast', 'Campos requeridos no completados')
-            session.flash('error-email', error_email)
-            session.flash('error-username', error_username)
+
+            if (email) {
+                session.flash('error-email', email)
+            }
+
+            if (username) {
+                session.flash('error-username', username)
+            }
 
             return response.redirect().back()
         }

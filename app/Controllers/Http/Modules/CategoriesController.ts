@@ -23,10 +23,13 @@ export default class CategoriesController {
         try {
             await request.validate(CategoryValidator)
         } catch (errorValidation) {
-            const [error_name] = ValidatorException(errorValidation)
+            const { name } = ValidatorException(errorValidation)
 
             session.put('error-toast', 'Campos requeridos no completados')
-            session.flash('error-name', error_name)
+
+            if (name) {
+                session.flash('error-name', name)
+            }
 
             return response.redirect().back()
         }
@@ -73,10 +76,13 @@ export default class CategoriesController {
         try {
             await request.validate(CategoryValidator)
         } catch (errorValidation) {
-            const [error_name] = ValidatorException(errorValidation)
+            const { name } = ValidatorException(errorValidation)
 
             session.put('error-toast', 'Campos requeridos no completados')
-            session.flash('error-name', error_name)
+
+            if (name) {
+                session.flash('error-name', name)
+            }
 
             return response.redirect().back()
         }
