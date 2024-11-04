@@ -1,0 +1,90 @@
+@layout('layout/app')
+
+@set('title', 'Crear Usuario')
+
+@section('body')
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ title }}</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <form method="POST" action="{{ route('users.store') }}">
+                {{ csrfField() }}
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-bold">
+                            <i class="fas fa-user"></i> Usuario
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="email">Email <span class="text-red">*</span></label>
+                            <input type="text"
+                                class="form-control {{ flashMessages.has('error-email') ? 'is-invalid' : '' }}"
+                                id="email" name="email" placeholder="Ingrese un email para el usuario">
+                            @if(flashMessages.has('error-email'))
+                            <span id="flash-message-email" class="text-red">
+                                {{ flashMessages.get('error-email') }}
+                            </span>
+                            @end
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Nombre de usuario <span class="text-red">*</span></label>
+                            <input type="text"
+                                class="form-control {{ flashMessages.has('error-username') ? 'is-invalid' : '' }}"
+                                id="username" name="username" placeholder="Ingrese un nombre de usuario">
+                            @if(flashMessages.has('error-username'))
+                            <span id="flash-message-username" class="text-red">
+                                {{ flashMessages.get('error-username') }}
+                            </span>
+                            @end
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                        <a href="{{ route('users.index') }}" class="btn btn-secondary">
+                            Volver
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const flashMessageEmail = document.getElementById('flash-message-email')
+        const emailInput = document.getElementById('email')
+
+        if (flashMessageEmail) {
+            emailInput.addEventListener('input', () => {
+                flashMessageEmail.style.transition = 'opacity 0.5s'
+                flashMessageEmail.style.opacity = '0'
+                emailInput.classList.remove('is-invalid')
+                setTimeout(() => flashMessageEmail.remove(), 500)
+            });
+        }
+
+        const flashMessageUsername = document.getElementById('flash-message-username')
+        const usernameInput = document.getElementById('username')
+
+        if (flashMessageUsername) {
+            usernameInput.addEventListener('input', () => {
+                flashMessageUsername.style.transition = 'opacity 0.5s'
+                flashMessageUsername.style.opacity = '0'
+                usernameInput.classList.remove('is-invalid')
+                setTimeout(() => flashMessageUsername.remove(), 500)
+            });
+        }
+    });
+</script>
+@end

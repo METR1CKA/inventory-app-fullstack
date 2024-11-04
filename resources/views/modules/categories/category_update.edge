@@ -10,11 +10,6 @@
                 <div class="col-sm-6">
                     <h1>{{ title }}</h1>
                 </div>
-                <div class="col-sm-6 text-right">
-                    <a href="{{ route('categories.index') }}" class="btn btn-secondary">
-                        Volver
-                    </a>
-                </div>
             </div>
         </div>
     </section>
@@ -25,6 +20,11 @@
                 action="{{ route('categories.update', { id: category.id }, { qs: { _method: 'PUT' } }) }}">
                 {{ csrfField() }}
                 <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-bold">
+                            <i class="fas fa-list"></i> Categoría
+                        </h3>
+                    </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Nombre <span class="text-red">*</span></label>
@@ -32,9 +32,11 @@
                                 class="form-control {{ flashMessages.has('error-name') ? 'is-invalid' : '' }}" id="name"
                                 name="name" value="{{ category.name }}"
                                 placeholder="Ingrese un nombre para la categoria">
+                            @if(flashMessages.has('error-name'))
                             <span class="text-red">
-                                {{ flashMessages.has('error-name') ? flashMessages.get('error-name') : '' }}
+                                {{ flashMessages.get('error-name') }}
                             </span>
+                            @end
                         </div>
 
                         <div class="form-group">
@@ -47,17 +49,31 @@
                                 placeholder="Ingrese una descripción para la categoria"></textarea>
                             @end
                         </div>
-
-                        <span class="text-red">
-                            {{ flashMessages.has('error') ? flashMessages.get('error') : '' }}
-                        </span>
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Actualizar Categoría</button>
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a href="{{ route('categories.index') }}" class="btn btn-secondary">
+                            Volver
+                        </a>
                     </div>
                 </div>
             </form>
         </div>
     </section>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const flashMessageName = document.getElementById('flash-message-name')
+        const nameInput = document.getElementById('name')
+
+        if (flashMessageName) {
+            nameInput.addEventListener('input', () => {
+                flashMessageName.style.transition = 'opacity 0.5s'
+                flashMessageName.style.opacity = '0'
+                nameInput.classList.remove('is-invalid')
+                setTimeout(() => flashMessageName.remove(), 500)
+            });
+        }
+    });
+</script>
 @end

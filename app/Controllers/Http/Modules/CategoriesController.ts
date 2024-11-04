@@ -1,35 +1,32 @@
-import CategoryValidator from 'App/Validators/Inventory/Category/CategoryValidator'
+import CategoryValidator from 'App/Validators/Modules/CategoryValidator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ValidatorException } from 'App/Exceptions/ValidatorException'
-import { success_toast, error_toast } from 'App/Services/Functions'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Category from 'App/Models/Category'
 
 export default class CategoriesController {
-    private categories = Category.query().orderBy('id', 'desc')
-
     public async index({ session, view }: HttpContextContract) {
-        const categories = await this.categories
+        const categories = await Category.all()
 
-        session.put(success_toast, 'Categorias obtenidas con éxito')
+        session.put('success-toast', 'Categorias obtenidas con éxito')
 
-        return await view.render('inventory/categories/category', {
+        return await view.render('modules/categories/category', {
             categories,
         })
     }
 
     public async create({ view }: HttpContextContract) {
-        return await view.render('inventory/categories/category_create')
+        return await view.render('modules/categories/category_create')
     }
 
     public async store({ session, request, response }: HttpContextContract) {
         try {
             await request.validate(CategoryValidator)
         } catch (errorValidation) {
-            const error = ValidatorException(errorValidation)
+            const [error_name] = ValidatorException(errorValidation)
 
-            session.put(error_toast, 'Campos requeridos no completados')
-            session.flash('error-name', error[0])
+            session.put('error-toast', 'Campos requeridos no completados')
+            session.flash('error-name', error_name)
 
             return response.redirect().back()
         }
@@ -45,8 +42,7 @@ export default class CategoriesController {
             console.error(error)
             await trx.rollback()
 
-            session.put(error_toast, 'Error al crear la categoría')
-            session.flash('error', error)
+            session.put('error-toast', 'Error al crear la categoría')
 
             return response.redirect().back()
         }
@@ -54,10 +50,16 @@ export default class CategoriesController {
         return response.redirect().toRoute('categories.index')
     }
 
-    public async edit({ params, view }: HttpContextContract) {
+    public async show({ response }: HttpContextContract) {
+        return response.redirect().toRoute('categories.index')
+    }
+
+    public async edit({ session, params, view }: HttpContextContract) {
         const category = await Category.findOrFail(params.id)
 
-        return await view.render('inventory/categories/category_update', {
+        session.put('success-toast', 'Categoría obtenida con éxito')
+
+        return await view.render('modules/categories/category_update', {
             category,
         })
     }
@@ -71,10 +73,10 @@ export default class CategoriesController {
         try {
             await request.validate(CategoryValidator)
         } catch (errorValidation) {
-            const error = ValidatorException(errorValidation)
+            const [error_name] = ValidatorException(errorValidation)
 
-            session.put('error_toast', 'Campos requeridos no completados')
-            session.flash('error-name', error[0])
+            session.put('error-toast', 'Campos requeridos no completados')
+            session.flash('error-name', error_name)
 
             return response.redirect().back()
         }
@@ -91,8 +93,7 @@ export default class CategoriesController {
             console.error(error)
             await trx.rollback()
 
-            session.put(error_toast, 'Error al actualizar la categoría')
-            session.flash('error', error)
+            session.put('error-toast', 'Error al actualizar la categoría')
 
             return response.redirect().back()
         }
@@ -112,7 +113,12 @@ export default class CategoriesController {
             console.error(error)
             await trx.rollback()
 
-            session.put(error_toast, 'Error al eliminar la categoría')
+            session.put(
+                'error-toast',
+                `Error al ${
+                    category.active ? 'desactivar' : 'activar'
+                } la categoría`,
+            )
 
             return response.redirect().back()
         }

@@ -1,21 +1,18 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-    Route.get('/', 'HomeController.index').as('/')
-
     Route.group(() => {
-        Route.resource('categories', 'CategoriesController')
-            .as('categories')
-            .except(['show'])
+        Route.resource('users', 'UsersController').as('users')
 
-        Route.resource('products', 'ProductsController')
-            .as('products')
-            .only(['index', 'store', 'update', 'destroy'])
+        Route.resource('categories', 'CategoriesController').as('categories')
 
-        Route.resource('entries', 'EntriesController')
-            .as('entries')
-            .only(['index', 'store', 'update'])
+        Route.resource('products', 'ProductsController').as('products')
     }).namespace('App/Controllers/Http/Modules')
-}).middleware('auth:web')
 
-Route.post('forget-toast/:key', 'ToastsController.forgetToast').prefix('api/v1')
+    Route.get('/', async ({ view }) => await view.render('home')).as('/')
+
+    Route.post('forget-toast/:key', async ({ params, session, response }) => {
+        if (params.key && session.has(params.key)) session.forget(params.key)
+        return response.noContent()
+    }).prefix('api/v1')
+}).middleware('auth:web')

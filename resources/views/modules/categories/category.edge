@@ -1,0 +1,99 @@
+@layout('layout/app')
+
+@set('title', 'Categorías')
+
+@set('table_id', 'datatable-categories')
+
+@section('body')
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ title }}</h1>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a href="{{ route('categories.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Crear Categoría
+                    </a>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="{{ table_id }}" class="table table-bordered table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">
+                                            ID
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            NOMBRE
+                                        </th>
+                                        <th class="text-center align-middle">
+                                            DESCRIPCIÓN
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            EDICIÓN
+                                        </th>
+                                        <th class="text-center align-middle no-sort">
+                                            ESTADO
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @each(category in categories)
+                                    <tr>
+                                        <td class="text-center align-middle">
+                                            {{ category.id }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ category.name }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ category.description ?? 'N/A' }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a href="{{ route('categories.edit', { id: category.id }) }}"
+                                                class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <form
+                                                action="{{ route('categories.destroy', { id: category.id }, { qs: { _method: 'DELETE' }}) }}"
+                                                method="post">
+                                                {{ csrfField() }}
+                                                <button type="submit" class="btn btn-link">
+                                                    <i class="fas fa-toggle-{{ category.active ? 'on' : 'off' }}"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @end
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+@end

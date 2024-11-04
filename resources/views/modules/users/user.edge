@@ -1,8 +1,8 @@
 @layout('layout/app')
 
-@set('title', 'Categorías')
+@set('title', 'Usuarios')
 
-@set('table_id', 'datatable-categories')
+@set('table_id', 'datatable-users')
 
 @section('body')
 <!-- Content Wrapper. Contains page content -->
@@ -15,9 +15,9 @@
                     <h1>{{ title }}</h1>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="{{ route('categories.create') }}" class="btn btn-primary">
+                    <a href="{{ route('users.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
-                        Crear Categoría
+                        Crear Usarios
                     </a>
                 </div>
             </div>
@@ -38,10 +38,10 @@
                                             ID
                                         </th>
                                         <th class="text-center align-middle">
-                                            NOMBRE
+                                            EMAIL
                                         </th>
                                         <th class="text-center align-middle">
-                                            DESCRIPCIÓN
+                                            NOMBRE DE USUARIO
                                         </th>
                                         <th class="text-center align-middle no-sort">
                                             EDICIÓN
@@ -52,30 +52,30 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @each(category in categories)
+                                    @each(user in users)
                                     <tr>
                                         <td class="text-center align-middle">
-                                            {{ category.id }}
+                                            {{ user.id }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ category.name }}
+                                            {{ user.email }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            {{ category.description ?? 'N/A' }}
+                                            {{ user.username }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            <a href="{{ route('categories.edit', { id: category.id }) }}"
+                                            <a href="{{ route('users.edit', { id: user.id }) }}"
                                                 class="btn btn-outline-primary">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         </td>
                                         <td class="text-center align-middle">
                                             <form
-                                                action="{{ route('categories.destroy', { id: category.id }, { qs: { _method: 'DELETE' }}) }}"
+                                                action="{{ route('users.destroy', { id: user.id }, { qs: { _method: 'DELETE' }}) }}"
                                                 method="post">
                                                 {{ csrfField() }}
                                                 <button type="submit" class="btn btn-link">
-                                                    <i class="fas fa-toggle-{{ category.active ? 'on' : 'off' }}"></i>
+                                                    <i class="fas fa-toggle-{{ user.active ? 'on' : 'off' }}"></i>
                                                 </button>
                                             </form>
                                         </td>
