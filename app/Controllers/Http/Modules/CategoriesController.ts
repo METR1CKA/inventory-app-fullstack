@@ -54,18 +54,8 @@ export default class CategoriesController {
         return response.redirect().toRoute('categories.index')
     }
 
-    public async edit({
-        session,
-        params,
-        response,
-        view,
-    }: HttpContextContract) {
-        const category = await Category.find(params.id)
-
-        if (!category) {
-            session.put(error_toast, 'Categoría no encontrada')
-            return response.redirect().back()
-        }
+    public async edit({ params, view }: HttpContextContract) {
+        const category = await Category.findOrFail(params.id)
 
         return await view.render('inventory/categories/category_update', {
             category,
@@ -111,11 +101,7 @@ export default class CategoriesController {
     }
 
     public async destroy({ session, params, response }: HttpContextContract) {
-        const category = await Category.find(params.id)
-
-        if (!category) {
-            return response.redirect().clearQs().back()
-        }
+        const category = await Category.findOrFail(params.id)
 
         const trx = await Database.transaction()
 
@@ -130,11 +116,6 @@ export default class CategoriesController {
 
             return response.redirect().back()
         }
-
-        session.put(
-            success_toast,
-            `Categoría ${category.active ? 'activada' : 'desactivada'}`,
-        )
 
         return response.redirect().toRoute('categories.index')
     }
