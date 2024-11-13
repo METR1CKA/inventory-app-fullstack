@@ -6,6 +6,7 @@ test('Checar middleware de autenticación', async ({ client }) => {
 
     response.assertStatus(200)
     response.assertRedirectsTo('/login')
+    response.assertTextIncludes('INVENTARIO')
 })
 
 test('Enviar credenciales para iniciar sesión', async ({ client }) => {
