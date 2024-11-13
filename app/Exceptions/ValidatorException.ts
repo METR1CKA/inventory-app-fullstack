@@ -1,8 +1,6 @@
 import Env from '@ioc:Adonis/Core/Env'
 
 export function ValidatorException(error: any) {
-    if (!error || !error.messages) return
-
     const { messages } = error
 
     const errors: { [key: string]: string } = {}
