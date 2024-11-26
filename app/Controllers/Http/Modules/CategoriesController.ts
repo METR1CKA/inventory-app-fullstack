@@ -22,13 +22,13 @@ export default class CategoriesController {
     public async store({ session, request, response }: HttpContextContract) {
         try {
             await request.validate(CategoryValidator)
-        } catch (errorValidation) {
-            const { name } = ValidatorException(errorValidation)
+        } catch (error) {
+            const { errors } = ValidatorException(error)
 
             session.put('error-toast', 'Campos requeridos no completados')
 
-            if (name) {
-                session.flash('error-name', name)
+            for (let keyError in errors) {
+                session.flash(keyError, errors[keyError])
             }
 
             return response.redirect().back()
@@ -40,9 +40,11 @@ export default class CategoriesController {
 
         try {
             await Category.create(data)
+
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put('error-toast', 'Error al crear la categoría')
@@ -75,28 +77,31 @@ export default class CategoriesController {
     }: HttpContextContract) {
         try {
             await request.validate(CategoryValidator)
-        } catch (errorValidation) {
-            const { name } = ValidatorException(errorValidation)
+        } catch (error) {
+            const { errors } = ValidatorException(error)
 
             session.put('error-toast', 'Campos requeridos no completados')
 
-            if (name) {
-                session.flash('error-name', name)
+            for (let keyError in errors) {
+                session.flash(keyError, errors[keyError])
             }
 
             return response.redirect().back()
         }
 
         const category = await Category.findOrFail(params.id)
+
         const data = request.only(['name', 'description'])
 
         const trx = await Database.transaction()
 
         try {
             await category.merge(data).save()
+
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put('error-toast', 'Error al actualizar la categoría')
@@ -114,9 +119,11 @@ export default class CategoriesController {
 
         try {
             await category.merge({ active: !category.active }).save()
+
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put(

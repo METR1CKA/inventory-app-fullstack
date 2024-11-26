@@ -16,7 +16,6 @@ export default class ProductsController {
 
         return await view.render('modules/products/product', {
             products,
-            // format: FormatDates.serializeDates().serialize,
         })
     }
 
@@ -31,22 +30,13 @@ export default class ProductsController {
     public async store({ session, request, response }: HttpContextContract) {
         try {
             await request.validate(ProductValidator)
-        } catch (errorValidation) {
-            const { category_id, name, stock } =
-                ValidatorException(errorValidation)
+        } catch (error) {
+            const { errors } = ValidatorException(error)
 
             session.put('error-toast', 'Campos requeridos no completados')
 
-            if (category_id) {
-                session.flash('error-category_id', category_id)
-            }
-
-            if (name) {
-                session.flash('error-name', name)
-            }
-
-            if (stock) {
-                session.flash('error-stock', stock)
+            for (let keyError in errors) {
+                session.flash(keyError, errors[keyError])
             }
 
             return response.redirect().back()
@@ -64,9 +54,11 @@ export default class ProductsController {
 
         try {
             await Product.create(data)
+
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put('error-toast', 'Error al crear el producto')
@@ -102,22 +94,13 @@ export default class ProductsController {
     }: HttpContextContract) {
         try {
             await request.validate(ProductValidator)
-        } catch (errorValidation) {
-            const { category_id, name, stock } =
-                ValidatorException(errorValidation)
+        } catch (error) {
+            const { errors } = ValidatorException(error)
 
             session.put('error-toast', 'Campos requeridos no completados')
 
-            if (category_id) {
-                session.flash('error-category_id', category_id)
-            }
-
-            if (name) {
-                session.flash('error-name', name)
-            }
-
-            if (stock) {
-                session.flash('error-stock', stock)
+            for (let keyError in errors) {
+                session.flash(keyError, errors[keyError])
             }
 
             return response.redirect().back()
@@ -141,6 +124,7 @@ export default class ProductsController {
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put('error-toast', 'Error al actualizar el producto')
@@ -162,6 +146,7 @@ export default class ProductsController {
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put(

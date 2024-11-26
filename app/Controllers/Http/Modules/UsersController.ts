@@ -23,17 +23,13 @@ export default class UsersController {
     public async store({ session, request, response }: HttpContextContract) {
         try {
             await request.validate(UserValidator)
-        } catch (errorValidation) {
-            const { email, username } = ValidatorException(errorValidation)
+        } catch (error) {
+            const { errors } = ValidatorException(error)
 
             session.put('error-toast', 'Campos requeridos no completados')
 
-            if (email) {
-                session.flash('error-email', email)
-            }
-
-            if (username) {
-                session.flash('error-username', username)
+            for (let keyError in errors) {
+                session.flash(keyError, errors[keyError])
             }
 
             return response.redirect().back()
@@ -47,6 +43,7 @@ export default class UsersController {
 
         if (existUser) {
             session.put('error-toast', 'El email ya está registrado')
+
             session.flash('error-email', 'El email ya está registrado')
 
             return response.redirect().back()
@@ -63,9 +60,11 @@ export default class UsersController {
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put('error-toast', 'Error al crear el usuario')
+
             session.flash('error', error)
 
             return response.redirect().back()
@@ -96,17 +95,13 @@ export default class UsersController {
     }: HttpContextContract) {
         try {
             await request.validate(UserValidator)
-        } catch (errorValidation) {
-            const { email, username } = ValidatorException(errorValidation)
+        } catch (error) {
+            const { errors } = ValidatorException(error)
 
             session.put('error-toast', 'Campos requeridos no completados')
 
-            if (email) {
-                session.flash('error-email', email)
-            }
-
-            if (username) {
-                session.flash('error-username', username)
+            for (let keyError in errors) {
+                session.flash(keyError, errors[keyError])
             }
 
             return response.redirect().back()
@@ -134,9 +129,11 @@ export default class UsersController {
 
         try {
             await user.merge(data).save()
+
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put('error-toast', 'Error al actualizar el usuario')
@@ -154,9 +151,11 @@ export default class UsersController {
 
         try {
             await user.merge({ active: !user.active }).save()
+
             await trx.commit()
         } catch (error) {
             console.error(error)
+
             await trx.rollback()
 
             session.put(

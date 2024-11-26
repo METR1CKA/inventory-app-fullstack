@@ -1,17 +1,35 @@
 import Env from '@ioc:Adonis/Core/Env'
 
-export function ValidatorException(error: any) {
+type ValidatorException = {
+    messages: { [key: string]: string }
+}
+
+type ValidatorError = {
+    [key: string]: string
+}
+
+export function ValidatorException(error: ValidatorException): {
+    errors: ValidatorError
+} {
     const { messages } = error
 
-    const errors: { [key: string]: string } = {}
+    const errors: ValidatorError = {}
 
     for (const field in messages) {
-        if (messages[field].length > 0) errors[field] = messages[field][0]
+        const message = messages[field]
+
+        if (message.length > 0) {
+            const [err] = message
+
+            errors[`error-${field}`] = err
+        }
     }
 
     if (Env.get('NODE_ENV') === 'development') {
         console.error('Errors: ', errors)
     }
 
-    return errors
+    return {
+        errors,
+    }
 }
