@@ -1,16 +1,19 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { test } from '@japa/runner'
+import User from 'App/Models/User'
 
-test('Checar middleware de autenticación', async ({ client }) => {
+const OK = 200
+
+test('Checar autenticación', async ({ client }) => {
     const response = await client.get('/')
 
-    response.assertStatus(200)
-    response.assertRedirectsTo('/login')
+    response.assertStatus(OK)
+    response.assertRedirectsToRoute('login')
     response.assertTextIncludes('INVENTARIO')
 })
 
-test('Enviar credenciales para iniciar sesión', async ({ client }) => {
-    const response = await client
+test('Iniciar sesión correctamente', async ({ client }) => {
+    const responseLogin = await client
         .post('/login')
         .form({
             email: Env.get('EMAIL'),
@@ -18,6 +21,25 @@ test('Enviar credenciales para iniciar sesión', async ({ client }) => {
         })
         .withCsrfToken()
 
-    response.assertStatus(200)
-    response.assertRedirectsTo('/')
+    responseLogin.assertStatus(OK)
+    responseLogin.assertRedirectsToRoute('/')
+
+    const user = await User.findByOrFail('email', Env.get('EMAIL'))
+
+    const responseHome = await client.get('/').loginAs(user)
+
+    responseHome.assertStatus(OK)
+    responseHome.assertTextIncludes('Bienvenido a Inventario App')
+})
+
+test('Inicio de sesión fallido por credenciales', async ({ client }) => {
+    const response = await client
+        .post('/login')
+        .form({
+            email: 'lorem@ipsum.com',
+            password: '123',
+        })
+        .withCsrfToken()
+
+    response.assertRedirectsToRoute('login')
 })
