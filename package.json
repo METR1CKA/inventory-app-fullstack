@@ -37,6 +37,7 @@
         "@adonisjs/session": "^6.4.0",
         "@adonisjs/shield": "^7.0.0",
         "@adonisjs/view": "^6.1.0",
+        "cheerio": "^1.0.0",
         "luxon": "^3.5.0",
         "mysql2": "^3.11.3",
         "pg": "^8.13.0",
