@@ -21,4 +21,4 @@ Route.group(() => {
     Route.get('/', getHome).as('/')
 
     Route.post('forget-toast/:key', removeToast).prefix('api/v1')
-}).middleware('auth:web')
+}).middleware(['auth:web', 'parseId'])

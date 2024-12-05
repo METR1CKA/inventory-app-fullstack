@@ -24,4 +24,4 @@ import 'App/Routes/modules'
 
 Route.any('*', async ({ view }) => {
     return await view.render('errors/not-found')
-})
+}).middleware('auth:web')

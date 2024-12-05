@@ -31,13 +31,12 @@ export default class ProductsController {
         try {
             await request.validate(ProductValidator)
         } catch (error) {
-            const { errors } = ValidatorException(error)
+            ValidatorException({
+                catchError: error,
+                session,
+            })
 
             session.put('error-toast', 'Campos requeridos no completados')
-
-            for (let keyError in errors) {
-                session.flash(keyError, errors[keyError])
-            }
 
             return response.redirect().back()
         }
@@ -53,7 +52,7 @@ export default class ProductsController {
         ])
 
         try {
-            await Product.create(data)
+            await Product.create(data, trx)
 
             await trx.commit()
         } catch (error) {
@@ -95,13 +94,12 @@ export default class ProductsController {
         try {
             await request.validate(ProductValidator)
         } catch (error) {
-            const { errors } = ValidatorException(error)
+            ValidatorException({
+                catchError: error,
+                session,
+            })
 
             session.put('error-toast', 'Campos requeridos no completados')
-
-            for (let keyError in errors) {
-                session.flash(keyError, errors[keyError])
-            }
 
             return response.redirect().back()
         }
@@ -119,7 +117,7 @@ export default class ProductsController {
         const trx = await Database.transaction()
 
         try {
-            await product.merge(data).save()
+            await product.useTransaction(trx).merge(data).save()
 
             await trx.commit()
         } catch (error) {
@@ -141,7 +139,10 @@ export default class ProductsController {
         const trx = await Database.transaction()
 
         try {
-            await product.merge({ active: !product.active }).save()
+            await product
+                .useTransaction(trx)
+                .merge({ active: !product.active })
+                .save()
 
             await trx.commit()
         } catch (error) {

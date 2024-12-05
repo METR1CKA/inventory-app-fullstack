@@ -23,13 +23,12 @@ export default class CategoriesController {
         try {
             await request.validate(CategoryValidator)
         } catch (error) {
-            const { errors } = ValidatorException(error)
+            ValidatorException({
+                catchError: error,
+                session,
+            })
 
             session.put('error-toast', 'Campos requeridos no completados')
-
-            for (let keyError in errors) {
-                session.flash(keyError, errors[keyError])
-            }
 
             return response.redirect().back()
         }
@@ -39,7 +38,7 @@ export default class CategoriesController {
         const data = request.only(['name', 'description'])
 
         try {
-            await Category.create(data)
+            await Category.create(data, trx)
 
             await trx.commit()
         } catch (error) {
@@ -78,13 +77,12 @@ export default class CategoriesController {
         try {
             await request.validate(CategoryValidator)
         } catch (error) {
-            const { errors } = ValidatorException(error)
+            ValidatorException({
+                catchError: error,
+                session,
+            })
 
             session.put('error-toast', 'Campos requeridos no completados')
-
-            for (let keyError in errors) {
-                session.flash(keyError, errors[keyError])
-            }
 
             return response.redirect().back()
         }
@@ -96,7 +94,7 @@ export default class CategoriesController {
         const trx = await Database.transaction()
 
         try {
-            await category.merge(data).save()
+            await category.useTransaction(trx).merge(data).save()
 
             await trx.commit()
         } catch (error) {
@@ -118,7 +116,10 @@ export default class CategoriesController {
         const trx = await Database.transaction()
 
         try {
-            await category.merge({ active: !category.active }).save()
+            await category
+                .useTransaction(trx)
+                .merge({ active: !category.active })
+                .save()
 
             await trx.commit()
         } catch (error) {

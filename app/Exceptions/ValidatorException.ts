@@ -1,3 +1,4 @@
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 
 type ValidatorException = {
@@ -8,10 +9,14 @@ type ValidatorError = {
     [key: string]: string
 }
 
-export function ValidatorException(error: ValidatorException): {
-    errors: ValidatorError
-} {
-    const { messages } = error
+export function ValidatorException({
+    catchError,
+    session,
+}: {
+    catchError: ValidatorException
+    session: HttpContextContract['session']
+}): void {
+    const { messages } = catchError
 
     const errors: ValidatorError = {}
 
@@ -29,7 +34,7 @@ export function ValidatorException(error: ValidatorException): {
         console.error('Errors: ', errors)
     }
 
-    return {
-        errors,
+    for (let keyError in errors) {
+        session.flash(keyError, errors[keyError])
     }
 }

@@ -24,13 +24,12 @@ export default class UsersController {
         try {
             await request.validate(UserValidator)
         } catch (error) {
-            const { errors } = ValidatorException(error)
+            ValidatorException({
+                catchError: error,
+                session,
+            })
 
             session.put('error-toast', 'Campos requeridos no completados')
-
-            for (let keyError in errors) {
-                session.flash(keyError, errors[keyError])
-            }
 
             return response.redirect().back()
         }
@@ -52,10 +51,13 @@ export default class UsersController {
         const trx = await Database.transaction()
 
         try {
-            await User.create({
-                ...data,
-                password: Env.get('PASSWORD'),
-            })
+            await User.create(
+                {
+                    ...data,
+                    password: Env.get('PASSWORD', 'default.password'),
+                },
+                trx,
+            )
 
             await trx.commit()
         } catch (error) {
@@ -64,8 +66,6 @@ export default class UsersController {
             await trx.rollback()
 
             session.put('error-toast', 'Error al crear el usuario')
-
-            session.flash('error', error)
 
             return response.redirect().back()
         }
@@ -96,22 +96,27 @@ export default class UsersController {
         try {
             await request.validate(UserValidator)
         } catch (error) {
-            const { errors } = ValidatorException(error)
+            ValidatorException({
+                catchError: error,
+                session,
+            })
 
             session.put('error-toast', 'Campos requeridos no completados')
-
-            for (let keyError in errors) {
-                session.flash(keyError, errors[keyError])
-            }
 
             return response.redirect().back()
         }
 
-        const user = await User.findOrFail(params.id)
+        const user = await User.find(params.id)
+
+        if (!user) {
+            session.put('error-toast', 'Usuario no encontrado')
+
+            return response.redirect().back()
+        }
 
         const data = request.only(['email', 'username'])
 
-        if (user.email !== data.email) {
+        if (data.email && data.email !== user.email) {
             const existUser = await User.query()
                 .where({ email: data.email })
                 .whereNot({ id: user.id })
@@ -128,7 +133,7 @@ export default class UsersController {
         const trx = await Database.transaction()
 
         try {
-            await user.merge(data).save()
+            await user.useTransaction(trx).merge(data).save()
 
             await trx.commit()
         } catch (error) {
@@ -150,7 +155,10 @@ export default class UsersController {
         const trx = await Database.transaction()
 
         try {
-            await user.merge({ active: !user.active }).save()
+            await user
+                .useTransaction(trx)
+                .merge({ active: !user.active })
+                .save()
 
             await trx.commit()
         } catch (error) {

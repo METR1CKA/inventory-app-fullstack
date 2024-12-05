@@ -12,6 +12,7 @@ export default class LoginValidator {
         ]),
         password: schema.string({ trim: true }, [
             rules.required(),
+            rules.minLength(8),
             rules.maxLength(15),
         ]),
     })
@@ -20,6 +21,7 @@ export default class LoginValidator {
         required: `El campo '{{ field }}' es requerido`,
         email: `El formato del campo '{{ field }}' no es valido`,
         maxLength: `El campo '{{ field }}' debe de contener como maximo {{ options.maxLength }} caracteres`,
+        minLength: `El campo '{{ field }}' debe de contener como minimo {{ options.minLength }} caracteres`,
         '*': (field, rule) => `El campo '${field}' debe ser de tipo '${rule}'`,
     }
 }
