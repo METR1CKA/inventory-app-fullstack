@@ -1,12 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
 import Env from '@ioc:Adonis/Core/Env'
 
 type ValidatorException = {
     messages: { [key: string]: string }
-}
-
-type ValidatorError = {
-    [key: string]: string
 }
 
 export function ValidatorException({
@@ -18,23 +15,35 @@ export function ValidatorException({
 }): void {
     const { messages } = catchError
 
-    const errors: ValidatorError = {}
-
     for (const field in messages) {
         const message = messages[field]
 
         if (message.length > 0) {
             const [err] = message
 
-            errors[`error-${field}`] = err
+            session.flash(`error-${field}`, err)
+
+            if (Env.get('NODE_ENV') === 'development') {
+                console.error('Error validation:', err)
+            }
         }
     }
 
-    if (Env.get('NODE_ENV') === 'development') {
-        console.error('Errors: ', errors)
-    }
+    session.put('error-toast', 'Campos requeridos no completados')
+}
 
-    for (let keyError in errors) {
-        session.flash(keyError, errors[keyError])
-    }
+export async function DatabaseException({
+    catchError,
+    session,
+    trx,
+}: {
+    catchError: any
+    session: HttpContextContract['session']
+    trx: TransactionClientContract
+}): Promise<void> {
+    console.error(catchError)
+
+    await trx.rollback()
+
+    session.put('error-toast', 'Error en la base de datos')
 }
