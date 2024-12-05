@@ -39,6 +39,7 @@ export default class AuthUsersController {
 
     public async logout({ auth, session, response }: HttpContextContract) {
         await auth.use('web').logout()
+
         session.clear()
         session.regenerate()
 
