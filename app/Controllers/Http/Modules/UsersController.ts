@@ -1,6 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
-import { ValidatorException } from 'App/Exceptions/ValidatorException'
+import {
+    DatabaseException,
+    ValidatorException,
+} from 'App/Exceptions/ValidatorException'
 import UserValidator from 'App/Validators/Modules/UserValidator'
 import Env from '@ioc:Adonis/Core/Env'
 import User from 'App/Models/User'
@@ -28,8 +31,6 @@ export default class UsersController {
                 catchError: error,
                 session,
             })
-
-            session.put('error-toast', 'Campos requeridos no completados')
 
             return response.redirect().back()
         }
@@ -61,11 +62,7 @@ export default class UsersController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put('error-toast', 'Error al crear el usuario')
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }
@@ -101,8 +98,6 @@ export default class UsersController {
                 session,
             })
 
-            session.put('error-toast', 'Campos requeridos no completados')
-
             return response.redirect().back()
         }
 
@@ -137,11 +132,7 @@ export default class UsersController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put('error-toast', 'Error al actualizar el usuario')
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }
@@ -162,14 +153,7 @@ export default class UsersController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put(
-                'error-toast',
-                `Error al ${user.active ? 'desactivar' : 'activar'} el usuario`,
-            )
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }

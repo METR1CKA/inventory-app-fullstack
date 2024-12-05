@@ -1,6 +1,9 @@
+import {
+    DatabaseException,
+    ValidatorException,
+} from 'App/Exceptions/ValidatorException'
 import CategoryValidator from 'App/Validators/Modules/CategoryValidator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { ValidatorException } from 'App/Exceptions/ValidatorException'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Category from 'App/Models/Category'
 
@@ -23,12 +26,7 @@ export default class CategoriesController {
         try {
             await request.validate(CategoryValidator)
         } catch (error) {
-            ValidatorException({
-                catchError: error,
-                session,
-            })
-
-            session.put('error-toast', 'Campos requeridos no completados')
+            ValidatorException({ catchError: error, session })
 
             return response.redirect().back()
         }
@@ -42,11 +40,7 @@ export default class CategoriesController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put('error-toast', 'Error al crear la categoría')
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }
@@ -77,12 +71,7 @@ export default class CategoriesController {
         try {
             await request.validate(CategoryValidator)
         } catch (error) {
-            ValidatorException({
-                catchError: error,
-                session,
-            })
-
-            session.put('error-toast', 'Campos requeridos no completados')
+            ValidatorException({ catchError: error, session })
 
             return response.redirect().back()
         }
@@ -98,11 +87,7 @@ export default class CategoriesController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put('error-toast', 'Error al actualizar la categoría')
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }
@@ -123,16 +108,7 @@ export default class CategoriesController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put(
-                'error-toast',
-                `Error al ${
-                    category.active ? 'desactivar' : 'activar'
-                } la categoría`,
-            )
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }

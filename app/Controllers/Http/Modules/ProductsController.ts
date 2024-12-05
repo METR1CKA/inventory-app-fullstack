@@ -1,7 +1,9 @@
+import {
+    DatabaseException,
+    ValidatorException,
+} from 'App/Exceptions/ValidatorException'
 import ProductValidator from 'App/Validators/Modules/ProductValidator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { ValidatorException } from 'App/Exceptions/ValidatorException'
-// import FormatDates from 'App/Services/FormatDates'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Category from 'App/Models/Category'
 import Product from 'App/Models/Product'
@@ -36,8 +38,6 @@ export default class ProductsController {
                 session,
             })
 
-            session.put('error-toast', 'Campos requeridos no completados')
-
             return response.redirect().back()
         }
 
@@ -56,11 +56,7 @@ export default class ProductsController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put('error-toast', 'Error al crear el producto')
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }
@@ -99,8 +95,6 @@ export default class ProductsController {
                 session,
             })
 
-            session.put('error-toast', 'Campos requeridos no completados')
-
             return response.redirect().back()
         }
 
@@ -121,11 +115,7 @@ export default class ProductsController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put('error-toast', 'Error al actualizar el producto')
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }
@@ -146,16 +136,7 @@ export default class ProductsController {
 
             await trx.commit()
         } catch (error) {
-            console.error(error)
-
-            await trx.rollback()
-
-            session.put(
-                'error-toast',
-                `Error al ${
-                    product.active ? 'desactivar' : 'activar'
-                } el producto`,
-            )
+            await DatabaseException({ catchError: error, session, trx })
 
             return response.redirect().back()
         }
