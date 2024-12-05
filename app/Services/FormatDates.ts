@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 
 const DATE_FORMATS = {
-    FULL: 'yyyy-MM-dd HH:mm:ss',
+    FULL: 'yyyy-MM-dd hh:mm:ss a',
     DATE: 'yyyy-MM-dd',
 } as const
 
@@ -122,6 +122,18 @@ class FormatDates {
     }) {
         const _date = DateTime.fromFormat(date, format).setZone(this.localZone)
         return _date.toJSDate()
+    }
+
+    public convertISOToDateTime({
+        date,
+        format,
+    }: {
+        date: string
+        format?: DateFormat
+    }) {
+        return DateTime.fromISO(date)
+            .setZone(this.localZone)
+            .toFormat(format ?? this.fullFormat)
     }
 
     public validateDates({ start, end }: { start: string; end: string }) {
