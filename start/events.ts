@@ -17,7 +17,7 @@ if (Env.get('DB_DEBUG')) {
 }
 
 Event.onError((event, error, data) => {
-    Logger.fatal('Event %s failed', event)
+    Logger.fatal('Event failed: %s', event)
     Logger.error(error)
     Logger.error(data)
 })
