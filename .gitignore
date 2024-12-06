@@ -20,3 +20,4 @@ logs
 .yarn/install-state.gz
 .pnp.*
 .yarn-integrity
+postgres_data

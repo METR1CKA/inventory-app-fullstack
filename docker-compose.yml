@@ -1,0 +1,38 @@
+services:
+    database:
+        image: postgres:latest
+        container_name: db_inventory_docker
+        restart: always
+        networks:
+            - app_network
+        environment:
+            POSTGRES_USER: ${PG_USER}
+            POSTGRES_PASSWORD: ${PG_PASSWORD}
+            POSTGRES_DB: ${PG_DB_NAME}
+        ports:
+            - "5436:5432"
+        volumes:
+            - ./postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+    inventory:
+        container_name: inventory_app
+        build: .
+        env_file: .env
+        networks:
+            - app_network
+        links:
+            - database
+        depends_on:
+            database:
+                condition: service_healthy
+        ports:
+            - "${PORT}:3333"
+networks:
+    app_network:
+        name: app_network
+        driver: bridge
